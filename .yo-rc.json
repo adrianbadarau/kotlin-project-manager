@@ -1,0 +1,60 @@
+{
+  "generator-jhipster-kotlin": {
+    "promptValues": {
+      "packageName": "com.for_the_love_of_code.kotlin_pm"
+    },
+    "jhipsterVersion": "6.0.1",
+    "applicationType": "monolith",
+    "baseName": "kotlin_pm",
+    "packageName": "com.for_the_love_of_code.kotlin_pm",
+    "packageFolder": "com/for_the_love_of_code/kotlin_pm",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": "elasticsearch",
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZWZiOGM5ZmE4ZGY0ZWZiYTU5ZmI2NWI1NzQ1NjkwZDY4Y2JiYTkxZmE5Yzc2ODNhMzNlMGZlZDdjNjMxNGI0NzgwYzcyNTUwMjYwNjZjYTJlODdjYjkyOGY4ZWZlNjQyZGM2MjZmMGU0MmJlMjRhMjZhMTE5ZDU2NjUxOTgxNDE="
+  },
+  "generator-jhipster": {
+    "jhipsterVersion": "6.0.1",
+    "applicationType": "monolith",
+    "baseName": "kotlin_pm",
+    "clientFramework": "angularX",
+    "clientTheme": "materia",
+    "clientThemeVariant": "primary",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [
+      {
+        "name": "generator-jhipster-kotlin",
+        "version": "0.8.1"
+      },
+      {
+        "name": "generator-jhipster-nav-element",
+        "version": "2.1.8"
+      },
+      {
+        "name": "generator-jhipster-primeng",
+        "version": "2.3.0"
+      },
+      {
+        "name": "generator-jhipster-administration-database",
+        "version": "1.0.4"
+      }
+    ],
+    "enableTranslation": false,
+    "blueprint": "generator-jhipster-kotlin",
+    "blueprintVersion": "0.8.1"
+  }
+}
