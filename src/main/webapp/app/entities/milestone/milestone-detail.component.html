@@ -1,0 +1,59 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="milestone">
+            <h2><span>Milestone</span> {{milestone.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{milestone.name}}</span>
+                </dd>
+                <dt><span>Estimated End Date</span></dt>
+                <dd>
+                    <span>{{milestone.estimatedEndDate}}</span>
+                </dd>
+                <dt><span>End Date</span></dt>
+                <dd>
+                    <span>{{milestone.endDate}}</span>
+                </dd>
+                <dt><span>Project</span></dt>
+                <dd>
+                    <div *ngIf="milestone.project">
+                        <a [routerLink]="['/project', milestone.project?.id, 'view']">{{milestone.project?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Field</span></dt>
+                <dd>
+                    <span *ngFor="let field of milestone.fields; let last = last">
+                        <a [routerLink]="['/field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Team</span></dt>
+                <dd>
+                    <span *ngFor="let team of milestone.teams; let last = last">
+                        <a [routerLink]="['/team', team?.id, 'view' ]">{{team.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    <span *ngFor="let user of milestone.users; let last = last">
+                        {{user.id}}{{last ? '' : ', '}}
+                    </span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/milestone', milestone.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

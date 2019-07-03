@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity Milestone.
+    -->
+    <changeSet id="20190703112215-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="milestone"
+                                 constraintName="fk_milestone_project_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="project"/>
+
+        <addForeignKeyConstraint baseColumnNames="milestone_id"
+                                 baseTableName="milestone_field"
+                                 constraintName="fk_milestone_field_milestone_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="milestone"/>
+
+        <addForeignKeyConstraint baseColumnNames="field_id"
+                                 baseTableName="milestone_field"
+                                 constraintName="fk_milestone_field_field_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="field"/>
+        
+        <addForeignKeyConstraint baseColumnNames="milestone_id"
+                                 baseTableName="milestone_team"
+                                 constraintName="fk_milestone_team_milestone_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="milestone"/>
+
+        <addForeignKeyConstraint baseColumnNames="team_id"
+                                 baseTableName="milestone_team"
+                                 constraintName="fk_milestone_team_team_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="team"/>
+        
+        <addForeignKeyConstraint baseColumnNames="milestone_id"
+                                 baseTableName="milestone_user"
+                                 constraintName="fk_milestone_user_milestone_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="milestone"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="milestone_user"
+                                 constraintName="fk_milestone_user_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+        
+    </changeSet>
+</databaseChangeLog>
