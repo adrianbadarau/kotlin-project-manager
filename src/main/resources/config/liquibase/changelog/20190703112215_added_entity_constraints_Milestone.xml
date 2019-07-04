@@ -14,6 +14,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="project"/>
 
+        <addForeignKeyConstraint baseColumnNames="status_id"
+                                 baseTableName="milestone"
+                                 constraintName="fk_milestone_status_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="status"/>
+
         <addForeignKeyConstraint baseColumnNames="milestone_id"
                                  baseTableName="milestone_field"
                                  constraintName="fk_milestone_field_milestone_id"

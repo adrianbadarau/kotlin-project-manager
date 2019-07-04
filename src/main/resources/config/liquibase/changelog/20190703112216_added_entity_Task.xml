@@ -20,7 +20,39 @@
                 <constraints nullable="false" />
             </column>
 
+            <column name="description" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="estimated_time" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="spent_time" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
             <column name="milestone_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="status_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="task_type_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="priority_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="assignee_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="parent_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 
@@ -45,6 +77,9 @@
                   context="dev">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
+            <column name="description" type="string"/>
+            <column name="estimated_time" type="numeric"/>
+            <column name="spent_time" type="numeric"/>
         </loadData>
     </changeSet>
 

@@ -31,7 +31,15 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Name</span></th>
+            <th><span>Description</span></th>
+            <th><span>Estimated Time</span></th>
+            <th><span>Spent Time</span></th>
             <th><span>Milestone</span></th>
+            <th><span>Status</span></th>
+            <th><span>Task Type</span></th>
+            <th><span>Priority</span></th>
+            <th><span>Assignee</span></th>
+            <th><span>Parent</span></th>
             <th><span>User</span></th>
             <th></th>
             </tr>
@@ -40,9 +48,35 @@
             <tr *ngFor="let task of tasks ;trackBy: trackId">
                 <td><a [routerLink]="['/task', task.id, 'view' ]">{{task.id}}</a></td>
                 <td>{{task.name}}</td>
+                <td>{{task.description}}</td>
+                <td>{{task.estimatedTime}}</td>
+                <td>{{task.spentTime}}</td>
                 <td>
                     <div *ngIf="task.milestone">
                         <a [routerLink]="['../milestone', task.milestone?.id, 'view' ]" >{{task.milestone?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="task.status">
+                        <a [routerLink]="['../status', task.status?.id, 'view' ]" >{{task.status?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="task.taskType">
+                        <a [routerLink]="['../task-type', task.taskType?.id, 'view' ]" >{{task.taskType?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="task.priority">
+                        <a [routerLink]="['../priority', task.priority?.id, 'view' ]" >{{task.priority?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    {{task.assignee?.id}}
+                </td>
+                <td>
+                    <div *ngIf="task.parent">
+                        <a [routerLink]="['../task', task.parent?.id, 'view' ]" >{{task.parent?.id}}</a>
                     </div>
                 </td>
                 <td>

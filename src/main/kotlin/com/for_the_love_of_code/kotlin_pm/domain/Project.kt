@@ -45,6 +45,10 @@ class Project(
     @Column(name = "name", nullable = false)
     var name: String? = null,
 
+    @get: NotNull
+    @Column(name = "code", nullable = false)
+    var code: String? = null,
+
     @Column(name = "description")
     var description: String? = null,
 
@@ -55,6 +59,10 @@ class Project(
     @JsonIgnoreProperties("projects")
     var owner: User? = null,
 
+    @ManyToOne
+    @JsonIgnoreProperties("projects")
+    var status: Status? = null,
+
     @ManyToMany
     @JoinTable(name = "project_field",
         joinColumns = [JoinColumn(name = "project_id", referencedColumnName = "id")],
@@ -62,7 +70,15 @@ class Project(
     var fields: MutableSet<Field> = mutableSetOf(),
 
     @OneToMany(mappedBy = "project")
-    var milestones: MutableSet<Milestone> = mutableSetOf()
+    var milestones: MutableSet<Milestone> = mutableSetOf(),
+
+    @ManyToMany(mappedBy = "projects")
+    @JsonIgnore
+    var attachments: MutableSet<Attachment> = mutableSetOf(),
+
+    @ManyToMany(mappedBy = "projects")
+    @JsonIgnore
+    var comments: MutableSet<Comment> = mutableSetOf()
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
@@ -88,6 +104,30 @@ class Project(
         milestone.project = null
         return this
     }
+
+    fun addAttachment(attachment: Attachment): Project {
+        this.attachments.add(attachment)
+        attachment.projects.add(this)
+        return this
+    }
+
+    fun removeAttachment(attachment: Attachment): Project {
+        this.attachments.remove(attachment)
+        attachment.projects.remove(this)
+        return this
+    }
+
+    fun addComment(comment: Comment): Project {
+        this.comments.add(comment)
+        comment.projects.add(this)
+        return this
+    }
+
+    fun removeComment(comment: Comment): Project {
+        this.comments.remove(comment)
+        comment.projects.remove(this)
+        return this
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     override fun equals(other: Any?): Boolean {
@@ -106,6 +146,7 @@ class Project(
         return "Project{" +
             "id=$id" +
             ", name='$name'" +
+            ", code='$code'" +
             ", description='$description'" +
             ", estimatedEndDate='$estimatedEndDate'" +
             "}"

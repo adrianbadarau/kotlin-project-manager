@@ -9,6 +9,13 @@
             ]
         },
         {
+            "fieldName": "code",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
             "fieldName": "description",
             "fieldType": "String"
         },
@@ -26,6 +33,13 @@
             "otherEntityField": "id"
         },
         {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "status",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "status",
+            "otherEntityField": "id"
+        },
+        {
             "relationshipType": "many-to-many",
             "otherEntityName": "field",
             "otherEntityRelationshipName": "project",
@@ -38,6 +52,22 @@
             "otherEntityName": "milestone",
             "otherEntityRelationshipName": "project",
             "relationshipName": "milestone"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "attachment",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "attachment",
+            "otherEntityField": "id",
+            "ownerSide": false
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "comment",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "comment",
+            "otherEntityField": "id",
+            "ownerSide": false
         }
     ],
     "changelogDate": "20190703112214",

@@ -17,9 +17,14 @@ import { KotlinPmAppRoutingModule } from './app-routing.module';
 import { KotlinPmHomeModule } from './home/home.module';
 import { KotlinPmAccountModule } from './account/account.module';
 import { KotlinPmEntityModule } from './entities/entity.module';
+import { PanelMenuModule } from 'primeng/panelmenu';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
+import { MainCustomComponent } from './layouts/main-custom/main-custom.component';
 
 @NgModule({
   imports: [
@@ -36,9 +41,12 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
     KotlinPmAccountModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     KotlinPmEntityModule,
-    KotlinPmAppRoutingModule
+    KotlinPmAppRoutingModule,
+    PanelMenuModule,
+    MenuModule,
+    BrowserAnimationsModule
   ],
-  declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
+  declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent, MainCustomComponent],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -61,7 +69,7 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
       multi: true
     }
   ],
-  bootstrap: [JhiMainComponent]
+  bootstrap: [MainCustomComponent]
 })
 export class KotlinPmAppModule {
   constructor(private dpConfig: NgbDatepickerConfig) {

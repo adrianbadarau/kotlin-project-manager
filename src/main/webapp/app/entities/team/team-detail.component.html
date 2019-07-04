@@ -15,6 +15,12 @@
                         {{user.id}}{{last ? '' : ', '}}
                     </span>
                 </dd>
+                <dt><span>Task</span></dt>
+                <dd>
+                    <span *ngFor="let task of team.tasks; let last = last">
+                        <a [routerLink]="['/task', task?.id, 'view' ]">{{task.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
             </dl>
 
             <button type="submit"

@@ -34,6 +34,7 @@
             <th><span>Estimated End Date</span></th>
             <th><span>End Date</span></th>
             <th><span>Project</span></th>
+            <th><span>Status</span></th>
             <th><span>Field</span></th>
             <th><span>Team</span></th>
             <th><span>User</span></th>
@@ -49,6 +50,11 @@
                 <td>
                     <div *ngIf="milestone.project">
                         <a [routerLink]="['../project', milestone.project?.id, 'view' ]" >{{milestone.project?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="milestone.status">
+                        <a [routerLink]="['../status', milestone.status?.id, 'view' ]" >{{milestone.status?.id}}</a>
                     </div>
                 </td>
                 <td>

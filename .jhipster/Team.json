@@ -20,6 +20,14 @@
         },
         {
             "relationshipType": "many-to-many",
+            "otherEntityName": "task",
+            "otherEntityRelationshipName": "team",
+            "relationshipName": "task",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
             "otherEntityName": "milestone",
             "otherEntityRelationshipName": "team",
             "relationshipName": "milestone",

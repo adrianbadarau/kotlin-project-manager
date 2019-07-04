@@ -17,6 +17,9 @@ import java.util.Optional
 @Repository
 interface TaskRepository : JpaRepository<Task, Long> {
 
+    @Query("select task from Task task where task.assignee.login = ?#{principal.username}")
+    fun findByAssigneeIsCurrentUser(): MutableList<Task>
+
     @Query(value = "select distinct task from Task task left join fetch task.users",
         countQuery = "select count(distinct task) from Task task")
     fun findAllWithEagerRelationships(pageable: Pageable): Page<Task>

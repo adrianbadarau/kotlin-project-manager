@@ -119,6 +119,7 @@ class ProjectResourceIT {
         assertThat(projectList).hasSize(databaseSizeBeforeCreate + 1)
         val testProject = projectList[projectList.size - 1]
         assertThat(testProject.name).isEqualTo(DEFAULT_NAME)
+        assertThat(testProject.code).isEqualTo(DEFAULT_CODE)
         assertThat(testProject.description).isEqualTo(DEFAULT_DESCRIPTION)
         assertThat(testProject.estimatedEndDate).isEqualTo(DEFAULT_ESTIMATED_END_DATE)
 
@@ -170,6 +171,25 @@ class ProjectResourceIT {
 
     @Test
     @Transactional
+    fun checkCodeIsRequired() {
+        val databaseSizeBeforeTest = projectRepository.findAll().size
+        // set the field null
+        project.code = null
+
+        // Create the Project, which fails.
+
+        restProjectMockMvc.perform(
+            post("/api/projects")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(project))
+        ).andExpect(status().isBadRequest)
+
+        val projectList = projectRepository.findAll()
+        assertThat(projectList).hasSize(databaseSizeBeforeTest)
+    }
+
+    @Test
+    @Transactional
     fun getAllProjects() {
         // Initialize the database
         projectRepository.saveAndFlush(project)
@@ -180,6 +200,7 @@ class ProjectResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(project.id?.toInt())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].estimatedEndDate").value(hasItem(DEFAULT_ESTIMATED_END_DATE.toString())))
     }
@@ -232,6 +253,7 @@ class ProjectResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(id.toInt()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.estimatedEndDate").value(DEFAULT_ESTIMATED_END_DATE.toString()))
     }
@@ -259,6 +281,7 @@ class ProjectResourceIT {
         // Disconnect from session so that the updates on updatedProject are not directly saved in db
         em.detach(updatedProject)
         updatedProject.name = UPDATED_NAME
+        updatedProject.code = UPDATED_CODE
         updatedProject.description = UPDATED_DESCRIPTION
         updatedProject.estimatedEndDate = UPDATED_ESTIMATED_END_DATE
 
@@ -273,6 +296,7 @@ class ProjectResourceIT {
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate)
         val testProject = projectList[projectList.size - 1]
         assertThat(testProject.name).isEqualTo(UPDATED_NAME)
+        assertThat(testProject.code).isEqualTo(UPDATED_CODE)
         assertThat(testProject.description).isEqualTo(UPDATED_DESCRIPTION)
         assertThat(testProject.estimatedEndDate).isEqualTo(UPDATED_ESTIMATED_END_DATE)
 
@@ -340,6 +364,7 @@ class ProjectResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(project.id?.toInt())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].estimatedEndDate").value(hasItem(DEFAULT_ESTIMATED_END_DATE.toString())))
     }
@@ -364,6 +389,9 @@ class ProjectResourceIT {
         private const val DEFAULT_NAME: String = "AAAAAAAAAA"
         private const val UPDATED_NAME = "BBBBBBBBBB"
 
+        private const val DEFAULT_CODE: String = "AAAAAAAAAA"
+        private const val UPDATED_CODE = "BBBBBBBBBB"
+
         private const val DEFAULT_DESCRIPTION: String = "AAAAAAAAAA"
         private const val UPDATED_DESCRIPTION = "BBBBBBBBBB"
 
@@ -379,6 +407,7 @@ class ProjectResourceIT {
         fun createEntity(em: EntityManager): Project {
             val project = Project()
             project.name = DEFAULT_NAME
+            project.code = DEFAULT_CODE
             project.description = DEFAULT_DESCRIPTION
             project.estimatedEndDate = DEFAULT_ESTIMATED_END_DATE
 
@@ -394,6 +423,7 @@ class ProjectResourceIT {
         fun createUpdatedEntity(em: EntityManager): Project {
             val project = Project()
             project.name = UPDATED_NAME
+            project.code = UPDATED_CODE
             project.description = UPDATED_DESCRIPTION
             project.estimatedEndDate = UPDATED_ESTIMATED_END_DATE
 

@@ -47,6 +47,12 @@ class Team(
         inverseJoinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")])
     var users: MutableSet<User> = mutableSetOf(),
 
+    @ManyToMany
+    @JoinTable(name = "team_task",
+        joinColumns = [JoinColumn(name = "team_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")])
+    var tasks: MutableSet<Task> = mutableSetOf(),
+
     @ManyToMany(mappedBy = "teams")
     @JsonIgnore
     var milestones: MutableSet<Milestone> = mutableSetOf()
@@ -61,6 +67,16 @@ class Team(
 
     fun removeUser(user: User): Team {
         this.users.remove(user)
+        return this
+    }
+
+    fun addTask(task: Task): Team {
+        this.tasks.add(task)
+        return this
+    }
+
+    fun removeTask(task: Task): Team {
+        this.tasks.remove(task)
         return this
     }
 

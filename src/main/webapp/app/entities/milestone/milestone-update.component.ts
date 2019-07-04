@@ -11,11 +11,17 @@ import { IMilestone, Milestone } from 'app/shared/model/milestone.model';
 import { MilestoneService } from './milestone.service';
 import { IProject } from 'app/shared/model/project.model';
 import { ProjectService } from 'app/entities/project';
+import { IStatus } from 'app/shared/model/status.model';
+import { StatusService } from 'app/entities/status';
 import { IField } from 'app/shared/model/field.model';
 import { FieldService } from 'app/entities/field';
 import { ITeam } from 'app/shared/model/team.model';
 import { TeamService } from 'app/entities/team';
 import { IUser, UserService } from 'app/core';
+import { IAttachment } from 'app/shared/model/attachment.model';
+import { AttachmentService } from 'app/entities/attachment';
+import { IComment } from 'app/shared/model/comment.model';
+import { CommentService } from 'app/entities/comment';
 
 @Component({
   selector: 'jhi-milestone-update',
@@ -27,11 +33,17 @@ export class MilestoneUpdateComponent implements OnInit {
 
   projects: IProject[];
 
+  statuses: IStatus[];
+
   fields: IField[];
 
   teams: ITeam[];
 
   users: IUser[];
+
+  attachments: IAttachment[];
+
+  comments: IComment[];
 
   editForm = this.fb.group({
     id: [],
@@ -39,6 +51,7 @@ export class MilestoneUpdateComponent implements OnInit {
     estimatedEndDate: [],
     endDate: [],
     project: [],
+    status: [],
     fields: [],
     teams: [],
     users: []
@@ -48,9 +61,12 @@ export class MilestoneUpdateComponent implements OnInit {
     protected jhiAlertService: JhiAlertService,
     protected milestoneService: MilestoneService,
     protected projectService: ProjectService,
+    protected statusService: StatusService,
     protected fieldService: FieldService,
     protected teamService: TeamService,
     protected userService: UserService,
+    protected attachmentService: AttachmentService,
+    protected commentService: CommentService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -68,6 +84,13 @@ export class MilestoneUpdateComponent implements OnInit {
         map((response: HttpResponse<IProject[]>) => response.body)
       )
       .subscribe((res: IProject[]) => (this.projects = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.statusService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IStatus[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IStatus[]>) => response.body)
+      )
+      .subscribe((res: IStatus[]) => (this.statuses = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.fieldService
       .query()
       .pipe(
@@ -89,6 +112,20 @@ export class MilestoneUpdateComponent implements OnInit {
         map((response: HttpResponse<IUser[]>) => response.body)
       )
       .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.attachmentService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IAttachment[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IAttachment[]>) => response.body)
+      )
+      .subscribe((res: IAttachment[]) => (this.attachments = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.commentService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IComment[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IComment[]>) => response.body)
+      )
+      .subscribe((res: IComment[]) => (this.comments = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(milestone: IMilestone) {
@@ -98,6 +135,7 @@ export class MilestoneUpdateComponent implements OnInit {
       estimatedEndDate: milestone.estimatedEndDate != null ? milestone.estimatedEndDate.format(DATE_TIME_FORMAT) : null,
       endDate: milestone.endDate != null ? milestone.endDate.format(DATE_TIME_FORMAT) : null,
       project: milestone.project,
+      status: milestone.status,
       fields: milestone.fields,
       teams: milestone.teams,
       users: milestone.users
@@ -129,6 +167,7 @@ export class MilestoneUpdateComponent implements OnInit {
           : undefined,
       endDate: this.editForm.get(['endDate']).value != null ? moment(this.editForm.get(['endDate']).value, DATE_TIME_FORMAT) : undefined,
       project: this.editForm.get(['project']).value,
+      status: this.editForm.get(['status']).value,
       fields: this.editForm.get(['fields']).value,
       teams: this.editForm.get(['teams']).value,
       users: this.editForm.get(['users']).value
@@ -156,6 +195,10 @@ export class MilestoneUpdateComponent implements OnInit {
     return item.id;
   }
 
+  trackStatusById(index: number, item: IStatus) {
+    return item.id;
+  }
+
   trackFieldById(index: number, item: IField) {
     return item.id;
   }
@@ -165,6 +208,14 @@ export class MilestoneUpdateComponent implements OnInit {
   }
 
   trackUserById(index: number, item: IUser) {
+    return item.id;
+  }
+
+  trackAttachmentById(index: number, item: IAttachment) {
+    return item.id;
+  }
+
+  trackCommentById(index: number, item: IComment) {
     return item.id;
   }
 

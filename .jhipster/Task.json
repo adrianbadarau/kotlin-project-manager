@@ -7,6 +7,21 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "estimatedTime",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "spentTime",
+            "fieldType": "Float"
         }
     ],
     "relationships": [
@@ -18,12 +33,77 @@
             "otherEntityField": "id"
         },
         {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "status",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "status",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "taskType",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "taskType",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "priority",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "priority",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "assignee",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "task",
+            "otherEntityRelationshipName": "subTasks",
+            "relationshipName": "parent",
+            "otherEntityField": "id"
+        },
+        {
             "relationshipType": "many-to-many",
             "otherEntityName": "user",
             "otherEntityRelationshipName": "task",
             "relationshipName": "user",
             "otherEntityField": "id",
             "ownerSide": true
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "task",
+            "otherEntityRelationshipName": "parent",
+            "relationshipName": "subTasks"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "attachment",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "attachment",
+            "otherEntityField": "id",
+            "ownerSide": false
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "comment",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "comment",
+            "otherEntityField": "id",
+            "ownerSide": false
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "team",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "team",
+            "otherEntityField": "id",
+            "ownerSide": false
         }
     ],
     "changelogDate": "20190703112216",

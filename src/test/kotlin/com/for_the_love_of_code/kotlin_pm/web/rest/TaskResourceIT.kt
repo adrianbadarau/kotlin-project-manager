@@ -117,6 +117,9 @@ class TaskResourceIT {
         assertThat(taskList).hasSize(databaseSizeBeforeCreate + 1)
         val testTask = taskList[taskList.size - 1]
         assertThat(testTask.name).isEqualTo(DEFAULT_NAME)
+        assertThat(testTask.description).isEqualTo(DEFAULT_DESCRIPTION)
+        assertThat(testTask.estimatedTime).isEqualTo(DEFAULT_ESTIMATED_TIME)
+        assertThat(testTask.spentTime).isEqualTo(DEFAULT_SPENT_TIME)
 
         // Validate the Task in Elasticsearch
     }
@@ -166,6 +169,25 @@ class TaskResourceIT {
 
     @Test
     @Transactional
+    fun checkDescriptionIsRequired() {
+        val databaseSizeBeforeTest = taskRepository.findAll().size
+        // set the field null
+        task.description = null
+
+        // Create the Task, which fails.
+
+        restTaskMockMvc.perform(
+            post("/api/tasks")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(task))
+        ).andExpect(status().isBadRequest)
+
+        val taskList = taskRepository.findAll()
+        assertThat(taskList).hasSize(databaseSizeBeforeTest)
+    }
+
+    @Test
+    @Transactional
     fun getAllTasks() {
         // Initialize the database
         taskRepository.saveAndFlush(task)
@@ -176,6 +198,9 @@ class TaskResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(task.id?.toInt())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].estimatedTime").value(hasItem(DEFAULT_ESTIMATED_TIME.toDouble())))
+            .andExpect(jsonPath("$.[*].spentTime").value(hasItem(DEFAULT_SPENT_TIME.toDouble())))
     }
     
     @SuppressWarnings("unchecked")
@@ -226,6 +251,9 @@ class TaskResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(id.toInt()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.estimatedTime").value(DEFAULT_ESTIMATED_TIME.toDouble()))
+            .andExpect(jsonPath("$.spentTime").value(DEFAULT_SPENT_TIME.toDouble()))
     }
 
     @Test
@@ -251,6 +279,9 @@ class TaskResourceIT {
         // Disconnect from session so that the updates on updatedTask are not directly saved in db
         em.detach(updatedTask)
         updatedTask.name = UPDATED_NAME
+        updatedTask.description = UPDATED_DESCRIPTION
+        updatedTask.estimatedTime = UPDATED_ESTIMATED_TIME
+        updatedTask.spentTime = UPDATED_SPENT_TIME
 
         restTaskMockMvc.perform(
             put("/api/tasks")
@@ -263,6 +294,9 @@ class TaskResourceIT {
         assertThat(taskList).hasSize(databaseSizeBeforeUpdate)
         val testTask = taskList[taskList.size - 1]
         assertThat(testTask.name).isEqualTo(UPDATED_NAME)
+        assertThat(testTask.description).isEqualTo(UPDATED_DESCRIPTION)
+        assertThat(testTask.estimatedTime).isEqualTo(UPDATED_ESTIMATED_TIME)
+        assertThat(testTask.spentTime).isEqualTo(UPDATED_SPENT_TIME)
 
         // Validate the Task in Elasticsearch
         verify(mockTaskSearchRepository, times(1)).save(testTask)
@@ -328,6 +362,9 @@ class TaskResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(task.id?.toInt())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].estimatedTime").value(hasItem(DEFAULT_ESTIMATED_TIME.toDouble())))
+            .andExpect(jsonPath("$.[*].spentTime").value(hasItem(DEFAULT_SPENT_TIME.toDouble())))
     }
 
     @Test
@@ -349,6 +386,15 @@ class TaskResourceIT {
 
         private const val DEFAULT_NAME: String = "AAAAAAAAAA"
         private const val UPDATED_NAME = "BBBBBBBBBB"
+
+        private const val DEFAULT_DESCRIPTION: String = "AAAAAAAAAA"
+        private const val UPDATED_DESCRIPTION = "BBBBBBBBBB"
+
+        private const val DEFAULT_ESTIMATED_TIME: Float = 1F
+        private const val UPDATED_ESTIMATED_TIME: Float = 2F
+
+        private const val DEFAULT_SPENT_TIME: Float = 1F
+        private const val UPDATED_SPENT_TIME: Float = 2F
         /**
          * Create an entity for this test.
          *
@@ -359,6 +405,9 @@ class TaskResourceIT {
         fun createEntity(em: EntityManager): Task {
             val task = Task()
             task.name = DEFAULT_NAME
+            task.description = DEFAULT_DESCRIPTION
+            task.estimatedTime = DEFAULT_ESTIMATED_TIME
+            task.spentTime = DEFAULT_SPENT_TIME
 
         return task
         }
@@ -372,6 +421,9 @@ class TaskResourceIT {
         fun createUpdatedEntity(em: EntityManager): Task {
             val task = Task()
             task.name = UPDATED_NAME
+            task.description = UPDATED_DESCRIPTION
+            task.estimatedTime = UPDATED_ESTIMATED_TIME
+            task.spentTime = UPDATED_SPENT_TIME
 
         return task
         }

@@ -57,6 +57,17 @@
 
         <addPrimaryKey columnNames="team_id, user_id" tableName="team_user"/>
         
+        <createTable tableName="team_task">
+            <column name="task_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="team_id, task_id" tableName="team_task"/>
+        
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

@@ -20,6 +20,10 @@
                 <constraints nullable="false" />
             </column>
 
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
             <column name="description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -29,6 +33,10 @@
             </column>
 
             <column name="owner_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="status_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 
@@ -54,6 +62,7 @@
                   context="dev">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
+            <column name="code" type="string"/>
             <column name="description" type="string"/>
             <column name="estimated_end_date" type="date"/>
         </loadData>

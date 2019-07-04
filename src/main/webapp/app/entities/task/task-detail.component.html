@@ -9,10 +9,50 @@
                 <dd>
                     <span>{{task.name}}</span>
                 </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{task.description}}</span>
+                </dd>
+                <dt><span>Estimated Time</span></dt>
+                <dd>
+                    <span>{{task.estimatedTime}}</span>
+                </dd>
+                <dt><span>Spent Time</span></dt>
+                <dd>
+                    <span>{{task.spentTime}}</span>
+                </dd>
                 <dt><span>Milestone</span></dt>
                 <dd>
                     <div *ngIf="task.milestone">
                         <a [routerLink]="['/milestone', task.milestone?.id, 'view']">{{task.milestone?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Status</span></dt>
+                <dd>
+                    <div *ngIf="task.status">
+                        <a [routerLink]="['/status', task.status?.id, 'view']">{{task.status?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Task Type</span></dt>
+                <dd>
+                    <div *ngIf="task.taskType">
+                        <a [routerLink]="['/task-type', task.taskType?.id, 'view']">{{task.taskType?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Priority</span></dt>
+                <dd>
+                    <div *ngIf="task.priority">
+                        <a [routerLink]="['/priority', task.priority?.id, 'view']">{{task.priority?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Assignee</span></dt>
+                <dd>
+                    {{task.assignee?.id}}
+                </dd>
+                <dt><span>Parent</span></dt>
+                <dd>
+                    <div *ngIf="task.parent">
+                        <a [routerLink]="['/task', task.parent?.id, 'view']">{{task.parent?.id}}</a>
                     </div>
                 </dd>
                 <dt><span>User</span></dt>

@@ -20,5 +20,17 @@
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
         
+        <addForeignKeyConstraint baseColumnNames="team_id"
+                                 baseTableName="team_task"
+                                 constraintName="fk_team_task_team_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="team"/>
+
+        <addForeignKeyConstraint baseColumnNames="task_id"
+                                 baseTableName="team_task"
+                                 constraintName="fk_team_task_task_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="task"/>
+        
     </changeSet>
 </databaseChangeLog>

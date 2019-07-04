@@ -14,6 +14,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
 
+        <addForeignKeyConstraint baseColumnNames="status_id"
+                                 baseTableName="project"
+                                 constraintName="fk_project_status_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="status"/>
+
         <addForeignKeyConstraint baseColumnNames="project_id"
                                  baseTableName="project_field"
                                  constraintName="fk_project_field_project_id"

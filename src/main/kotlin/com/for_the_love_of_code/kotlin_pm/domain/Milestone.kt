@@ -55,6 +55,10 @@ class Milestone(
     @JsonIgnoreProperties("milestones")
     var project: Project? = null,
 
+    @ManyToOne
+    @JsonIgnoreProperties("milestones")
+    var status: Status? = null,
+
     @ManyToMany
     @JoinTable(name = "milestone_field",
         joinColumns = [JoinColumn(name = "milestone_id", referencedColumnName = "id")],
@@ -74,7 +78,15 @@ class Milestone(
     var users: MutableSet<User> = mutableSetOf(),
 
     @OneToMany(mappedBy = "milestone")
-    var tasks: MutableSet<Task> = mutableSetOf()
+    var tasks: MutableSet<Task> = mutableSetOf(),
+
+    @ManyToMany(mappedBy = "milestones")
+    @JsonIgnore
+    var attachments: MutableSet<Attachment> = mutableSetOf(),
+
+    @ManyToMany(mappedBy = "milestones")
+    @JsonIgnore
+    var comments: MutableSet<Comment> = mutableSetOf()
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
@@ -118,6 +130,30 @@ class Milestone(
     fun removeTask(task: Task): Milestone {
         this.tasks.remove(task)
         task.milestone = null
+        return this
+    }
+
+    fun addAttachment(attachment: Attachment): Milestone {
+        this.attachments.add(attachment)
+        attachment.milestones.add(this)
+        return this
+    }
+
+    fun removeAttachment(attachment: Attachment): Milestone {
+        this.attachments.remove(attachment)
+        attachment.milestones.remove(this)
+        return this
+    }
+
+    fun addComment(comment: Comment): Milestone {
+        this.comments.add(comment)
+        comment.milestones.add(this)
+        return this
+    }
+
+    fun removeComment(comment: Comment): Milestone {
+        this.comments.remove(comment)
+        comment.milestones.remove(this)
         return this
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove

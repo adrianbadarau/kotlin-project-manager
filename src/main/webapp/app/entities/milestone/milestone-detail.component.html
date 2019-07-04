@@ -23,6 +23,12 @@
                         <a [routerLink]="['/project', milestone.project?.id, 'view']">{{milestone.project?.id}}</a>
                     </div>
                 </dd>
+                <dt><span>Status</span></dt>
+                <dd>
+                    <div *ngIf="milestone.status">
+                        <a [routerLink]="['/status', milestone.status?.id, 'view']">{{milestone.status?.id}}</a>
+                    </div>
+                </dd>
                 <dt><span>Field</span></dt>
                 <dd>
                     <span *ngFor="let field of milestone.fields; let last = last">

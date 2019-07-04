@@ -1,13 +1,15 @@
 import { IUser } from 'app/core/user/user.model';
+import { ITask } from 'app/shared/model/task.model';
 import { IMilestone } from 'app/shared/model/milestone.model';
 
 export interface ITeam {
   id?: number;
   name?: string;
   users?: IUser[];
+  tasks?: ITask[];
   milestones?: IMilestone[];
 }
 
 export class Team implements ITeam {
-  constructor(public id?: number, public name?: string, public users?: IUser[], public milestones?: IMilestone[]) {}
+  constructor(public id?: number, public name?: string, public users?: IUser[], public tasks?: ITask[], public milestones?: IMilestone[]) {}
 }
