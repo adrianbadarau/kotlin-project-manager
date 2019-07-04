@@ -11,6 +11,7 @@ import { ProjectDetailComponent } from './project-detail.component';
 import { ProjectUpdateComponent } from './project-update.component';
 import { ProjectDeletePopupComponent } from './project-delete-dialog.component';
 import { IProject } from 'app/shared/model/project.model';
+import { ProjectManageComponent } from 'app/entities/project/manage/manage.component';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectResolve implements Resolve<IProject> {
@@ -52,7 +53,7 @@ export const projectRoute: Routes = [
   },
   {
     path: 'new',
-    component: ProjectUpdateComponent,
+    component: ProjectManageComponent,
     resolve: {
       project: ProjectResolve
     },
