@@ -1,0 +1,45 @@
+{
+    "name": "Benefit",
+    "fields": [
+        {
+            "fieldName": "description",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "benefitType",
+            "otherEntityRelationshipName": "benefit",
+            "relationshipName": "type",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "field",
+            "otherEntityRelationshipName": "benefit",
+            "relationshipName": "field",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "businessCase",
+            "otherEntityRelationshipName": "benefit",
+            "relationshipName": "businessCase",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190708111519",
+    "entityTableName": "benefit",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

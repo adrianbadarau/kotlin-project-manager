@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="businessCase">
+            <h2><span>Business Case</span> {{businessCase.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Summary</span></dt>
+                <dd>
+                    <span>{{businessCase.summary}}</span>
+                </dd>
+                <dt><span>Field</span></dt>
+                <dd>
+                    <span *ngFor="let field of businessCase.fields; let last = last">
+                        <a [routerLink]="['/field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/business-case', businessCase.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+{
+    "name": "Project",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "objective",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength"
+            ],
+            "fieldValidateRulesMinlength": 10
+        },
+        {
+            "fieldName": "target",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "budget",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "risk",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "benefitMesurement",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "businessCase",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "businessCase",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "team",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "team"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "delivrable",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "delivrable"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "field",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "field",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "performance",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "performance",
+            "otherEntityField": "id",
+            "ownerSide": true
+        }
+    ],
+    "changelogDate": "20190708111517",
+    "entityTableName": "project",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

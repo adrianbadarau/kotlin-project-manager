@@ -1,0 +1,46 @@
+{
+    "name": "Comment",
+    "fields": [
+        {
+            "fieldName": "body",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "createdAt",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "task",
+            "otherEntityRelationshipName": "comment",
+            "relationshipName": "task",
+            "otherEntityField": "id",
+            "ownerSide": false
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "milestone",
+            "otherEntityRelationshipName": "comment",
+            "relationshipName": "milestone",
+            "otherEntityField": "id",
+            "ownerSide": false
+        }
+    ],
+    "changelogDate": "20190708111529",
+    "entityTableName": "comment",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

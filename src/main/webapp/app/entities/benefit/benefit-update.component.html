@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-benefit-heading">Create or edit a Benefit</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!editForm.get('id').value">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                           formControlName="description"/>
+                    <div *ngIf="editForm.get('description').invalid && (editForm.get('description').dirty || editForm.get('description').touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('description').errors.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_type">Type</label>
+                    <select class="form-control" id="field_type" name="type" formControlName="type">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="benefitTypeOption.id === editForm.get('type').value?.id ? editForm.get('type').value : benefitTypeOption" *ngFor="let benefitTypeOption of benefittypes; trackBy: trackBenefitTypeById">{{benefitTypeOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="field_fields">Field</label>
+                    <select class="form-control" id="field_fields" multiple name="fields" formControlName="fields">
+                        <option [ngValue]="getSelected(editForm.get('fields').value, fieldOption)" *ngFor="let fieldOption of fields; trackBy: trackFieldById">{{fieldOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_businessCase">Business Case</label>
+                    <select class="form-control" id="field_businessCase" name="businessCase" formControlName="businessCase">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="businessCaseOption.id === editForm.get('businessCase').value?.id ? editForm.get('businessCase').value : businessCaseOption" *ngFor="let businessCaseOption of businesscases; trackBy: trackBusinessCaseById">{{businessCaseOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

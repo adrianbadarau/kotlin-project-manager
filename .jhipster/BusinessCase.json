@@ -1,0 +1,41 @@
+{
+    "name": "BusinessCase",
+    "fields": [
+        {
+            "fieldName": "summary",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "benefit",
+            "otherEntityRelationshipName": "businessCase",
+            "relationshipName": "benefit"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "field",
+            "otherEntityRelationshipName": "businessCase",
+            "relationshipName": "field",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "project",
+            "otherEntityRelationshipName": "businessCase",
+            "relationshipName": "project",
+            "ownerSide": false
+        }
+    ],
+    "changelogDate": "20190708111518",
+    "entityTableName": "business_case",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

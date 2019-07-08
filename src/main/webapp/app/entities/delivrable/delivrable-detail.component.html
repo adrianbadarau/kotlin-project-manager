@@ -1,0 +1,47 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="delivrable">
+            <h2><span>Delivrable</span> {{delivrable.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{delivrable.name}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{delivrable.description}}</span>
+                </dd>
+                <dt><span>Target</span></dt>
+                <dd>
+                    <span>{{delivrable.target}}</span>
+                </dd>
+                <dt><span>Field</span></dt>
+                <dd>
+                    <span *ngFor="let field of delivrable.fields; let last = last">
+                        <a [routerLink]="['/field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Project</span></dt>
+                <dd>
+                    <div *ngIf="delivrable.project">
+                        <a [routerLink]="['/project', delivrable.project?.id, 'view']">{{delivrable.project?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/delivrable', delivrable.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

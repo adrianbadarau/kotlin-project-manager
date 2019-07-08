@@ -1,0 +1,52 @@
+{
+    "name": "Team",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "task",
+            "otherEntityRelationshipName": "assignedTeam",
+            "relationshipName": "task"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "team",
+            "relationshipName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "project",
+            "otherEntityRelationshipName": "team",
+            "relationshipName": "project",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "task",
+            "otherEntityRelationshipName": "team",
+            "relationshipName": "task",
+            "otherEntityField": "id",
+            "ownerSide": false
+        }
+    ],
+    "changelogDate": "20190708111527",
+    "entityTableName": "team",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

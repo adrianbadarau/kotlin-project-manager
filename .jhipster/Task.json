@@ -1,0 +1,84 @@
+{
+    "name": "Task",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "estimatedDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "details",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "status",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "status",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "projectUpdate",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "projectUpdate",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "comment",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "comment",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "team",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "team",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "team",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "assignedTeam",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "milestone",
+            "otherEntityRelationshipName": "task",
+            "relationshipName": "milestone",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190708111524",
+    "entityTableName": "task",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

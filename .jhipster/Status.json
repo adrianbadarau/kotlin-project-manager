@@ -1,0 +1,35 @@
+{
+    "name": "Status",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "milestone",
+            "otherEntityRelationshipName": "status",
+            "relationshipName": "milestone"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "task",
+            "otherEntityRelationshipName": "status",
+            "relationshipName": "task"
+        }
+    ],
+    "changelogDate": "20190708111523",
+    "entityTableName": "status",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

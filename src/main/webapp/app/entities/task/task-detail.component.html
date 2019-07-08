@@ -1,0 +1,77 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="task">
+            <h2><span>Task</span> {{task.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{task.name}}</span>
+                </dd>
+                <dt><span>Estimated Date</span></dt>
+                <dd>
+                    <span>{{task.estimatedDate}}</span>
+                </dd>
+                <dt><span>Details</span></dt>
+                <dd>
+                    <span>{{task.details}}</span>
+                </dd>
+                <dt><span>Status</span></dt>
+                <dd>
+                    <div *ngIf="task.status">
+                        <a [routerLink]="['/status', task.status?.id, 'view']">{{task.status?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Project Update</span></dt>
+                <dd>
+                    <span *ngFor="let projectUpdate of task.projectUpdates; let last = last">
+                        <a [routerLink]="['/project-update', projectUpdate?.id, 'view' ]">{{projectUpdate.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Comment</span></dt>
+                <dd>
+                    <span *ngFor="let comment of task.comments; let last = last">
+                        <a [routerLink]="['/comment', comment?.id, 'view' ]">{{comment.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    <span *ngFor="let user of task.users; let last = last">
+                        {{user.id}}{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Team</span></dt>
+                <dd>
+                    <span *ngFor="let team of task.teams; let last = last">
+                        <a [routerLink]="['/team', team?.id, 'view' ]">{{team.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Assigned Team</span></dt>
+                <dd>
+                    <div *ngIf="task.assignedTeam">
+                        <a [routerLink]="['/team', task.assignedTeam?.id, 'view']">{{task.assignedTeam?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Milestone</span></dt>
+                <dd>
+                    <div *ngIf="task.milestone">
+                        <a [routerLink]="['/milestone', task.milestone?.id, 'view']">{{task.milestone?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/task', task.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

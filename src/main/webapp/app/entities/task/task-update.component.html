@@ -1,0 +1,91 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-task-heading">Create or edit a Task</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!editForm.get('id').value">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name"/>
+                    <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('name').errors.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_estimatedDate">Estimated Date</label>
+                    <div class="d-flex">
+                        <input id="field_estimatedDate" type="datetime-local" class="form-control" name="estimatedDate" formControlName="estimatedDate" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_details">Details</label>
+                    <input type="text" class="form-control" name="details" id="field_details"
+                           formControlName="details"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_status">Status</label>
+                    <select class="form-control" id="field_status" name="status" formControlName="status">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="statusOption.id === editForm.get('status').value?.id ? editForm.get('status').value : statusOption" *ngFor="let statusOption of statuses; trackBy: trackStatusById">{{statusOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="field_projectUpdates">Project Update</label>
+                    <select class="form-control" id="field_projectUpdates" multiple name="projectUpdates" formControlName="projectUpdates">
+                        <option [ngValue]="getSelected(editForm.get('projectUpdates').value, projectUpdateOption)" *ngFor="let projectUpdateOption of projectupdates; trackBy: trackProjectUpdateById">{{projectUpdateOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="field_comments">Comment</label>
+                    <select class="form-control" id="field_comments" multiple name="comments" formControlName="comments">
+                        <option [ngValue]="getSelected(editForm.get('comments').value, commentOption)" *ngFor="let commentOption of comments; trackBy: trackCommentById">{{commentOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="field_users">User</label>
+                    <select class="form-control" id="field_users" multiple name="users" formControlName="users">
+                        <option [ngValue]="getSelected(editForm.get('users').value, userOption)" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="field_teams">Team</label>
+                    <select class="form-control" id="field_teams" multiple name="teams" formControlName="teams">
+                        <option [ngValue]="getSelected(editForm.get('teams').value, teamOption)" *ngFor="let teamOption of teams; trackBy: trackTeamById">{{teamOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_assignedTeam">Assigned Team</label>
+                    <select class="form-control" id="field_assignedTeam" name="assignedTeam" formControlName="assignedTeam">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="teamOption.id === editForm.get('assignedTeam').value?.id ? editForm.get('assignedTeam').value : teamOption" *ngFor="let teamOption of teams; trackBy: trackTeamById">{{teamOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_milestone">Milestone</label>
+                    <select class="form-control" id="field_milestone" name="milestone" formControlName="milestone">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="milestoneOption.id === editForm.get('milestone').value?.id ? editForm.get('milestone').value : milestoneOption" *ngFor="let milestoneOption of milestones; trackBy: trackMilestoneById">{{milestoneOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
