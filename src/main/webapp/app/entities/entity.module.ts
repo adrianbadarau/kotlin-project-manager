@@ -49,10 +49,6 @@ import { RouterModule } from '@angular/router';
         loadChildren: './team/team.module#PmAppTeamModule'
       },
       {
-        path: 'field',
-        loadChildren: './field/field.module#PmAppFieldModule'
-      },
-      {
         path: 'comment',
         loadChildren: './comment/comment.module#PmAppCommentModule'
       }

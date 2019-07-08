@@ -1,0 +1,38 @@
+<h2>Create new Project</h2>
+<div class="row">
+    <div class="col-md-4">
+            <span class="ui-float-label">
+                <input id="projectName" type="text" size="20" pInputText [(ngModel)]="project.name">
+                <label for="projectName">ProjectName</label>
+            </span>
+    </div>
+    <div class="col-md-2">
+            <span class="ui-float-label">
+                <input id="projectCode" type="text" size="10" pInputText [(ngModel)]="project.code">
+                <label for="projectCode">ProjectCode</label>
+            </span>
+    </div>
+    <div class="col-md-2">
+        <p-calendar [(ngModel)]="project.estimatedEndDate" [monthNavigator]="true" [yearNavigator]="true"
+                    [placeholder]="'Estimated end date'" yearRange="2019:2040"></p-calendar>
+    </div>
+    <div class="col-md-4">
+        <p-autoComplete [(ngModel)]="project.owner" [suggestions]="results"
+                        (completeMethod)="search($event)"></p-autoComplete>
+        <a (click)="onClickAssignToMe()">Assign to me</a>
+    </div>
+</div>
+<h4>Description</h4>
+<div class="row">
+    <div class="col-md-12">
+        <p-editor [(ngModel)]="project.description" [style]="{'height':'15em'}"></p-editor>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-12">
+        <p-panel header="Custom Fields" [toggleable]="true">
+            <jhi-custom-field-manage-multiple [existingFields]="[]"></jhi-custom-field-manage-multiple>
+        </p-panel>
+    </div>
+</div>
