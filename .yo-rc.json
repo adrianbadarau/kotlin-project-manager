@@ -1,0 +1,49 @@
+{
+  "generator-jhipster-kotlin": {
+    "promptValues": {
+      "packageName": "com.lenovo.coe"
+    },
+    "jhipsterVersion": "6.1.2",
+    "applicationType": "monolith",
+    "baseName": "pm_app",
+    "packageName": "com.lenovo.coe",
+    "packageFolder": "com/lenovo/coe",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "mongodb",
+    "devDatabaseType": "mongodb",
+    "prodDatabaseType": "mongodb",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MjliOGY2ZTI4ZWI5Mzk4NWZlMDE3MGM4ZDIwZmY1YzUwZTk2MTM0YTA5ZTIxZTdlOGYxNTI1MDMwYWNkMTgzODJkMDNjZmE2NzI5NjU0MzI1NGIzZDAyOTIyYmM2NzRmODlkYjViODdjOTM4NzA3Mzk3ODI3ZWQxZTYzNWRkMGM="
+  },
+  "generator-jhipster": {
+    "jhipsterVersion": "6.1.2",
+    "applicationType": "monolith",
+    "baseName": "pm_app",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "materia",
+    "clientThemeVariant": "primary",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [
+      {
+        "name": "generator-jhipster-kotlin",
+        "version": "1.0.0"
+      }
+    ],
+    "enableTranslation": false,
+    "blueprint": "generator-jhipster-kotlin",
+    "blueprintVersion": "1.0.0"
+  }
+}
