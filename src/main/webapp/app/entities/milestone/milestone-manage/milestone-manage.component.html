@@ -2,22 +2,16 @@
 <div class="row">
     <div class="col-md-4">
             <span class="ui-float-label">
-                <input id="projectName" type="text" size="20" pInputText [(ngModel)]="project.name">
-                <label for="projectName">ProjectName</label>
+                <input id="projectName" type="text" size="20" pInputText [(ngModel)]="milestone.name">
+                <label for="projectName">Name</label>
             </span>
     </div>
     <div class="col-md-2">
-            <span class="ui-float-label">
-                <input id="projectCode" type="text" size="10" pInputText [(ngModel)]="project.code">
-                <label for="projectCode">ProjectCode</label>
-            </span>
-    </div>
-    <div class="col-md-2">
-        <p-calendar [(ngModel)]="project.estimatedEndDate" [monthNavigator]="true" [yearNavigator]="true"
+        <p-calendar [(ngModel)]="milestone.estimatedEndDate" [monthNavigator]="true" [yearNavigator]="true"
                     [placeholder]="'Estimated end date'" yearRange="2019:2040"></p-calendar>
     </div>
     <div class="col-md-4">
-        <p-autoComplete [(ngModel)]="project.owner" [suggestions]="results"
+        <p-autoComplete [(ngModel)]="milestone.teams" [suggestions]="results"
                         (completeMethod)="search($event)"></p-autoComplete>
         <a (click)="onClickAssignToMe()">Assign to me</a>
     </div>

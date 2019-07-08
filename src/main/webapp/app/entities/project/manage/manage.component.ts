@@ -8,7 +8,7 @@ import { Project } from 'app/shared/model/project.model';
 })
 export class ProjectManageComponent implements OnInit {
   private project: Project;
-  results: string[];
+  results: string[] = ['abadarau', 'testUser'];
 
   constructor() {}
 
