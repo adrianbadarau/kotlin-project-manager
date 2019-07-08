@@ -4,8 +4,6 @@ import com.lenovo.coe.domain.Delivrable
 import com.lenovo.coe.repository.DelivrableRepository
 import org.slf4j.LoggerFactory
 
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 import java.util.Optional
@@ -38,17 +36,8 @@ class DelivrableService(
      */
     fun findAll(): MutableList<Delivrable> {
         log.debug("Request to get all Delivrables")
-        return delivrableRepository.findAllWithEagerRelationships()
+        return delivrableRepository.findAll()
     }
-
-    /**
-     * Get all the delivrables with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    fun findAllWithEagerRelationships(pageable: Pageable) =
-        delivrableRepository.findAllWithEagerRelationships(pageable)
-
 
     /**
      * Get one delivrable by id.
@@ -58,7 +47,7 @@ class DelivrableService(
      */
     fun findOne(id: String): Optional<Delivrable> {
         log.debug("Request to get Delivrable : {}", id)
-        return delivrableRepository.findOneWithEagerRelationships(id)
+        return delivrableRepository.findById(id)
     }
 
     /**

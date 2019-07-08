@@ -49,12 +49,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="field_fields">Field</label>
-                    <select class="form-control" id="field_fields" multiple name="fields" formControlName="fields">
-                        <option [ngValue]="getSelected(editForm.get('fields').value, fieldOption)" *ngFor="let fieldOption of fields; trackBy: trackFieldById">{{fieldOption.id}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label class="form-control-label" for="field_project">Project</label>
                     <select class="form-control" id="field_project" name="project" formControlName="project">
                         <option [ngValue]="null"></option>

@@ -80,11 +80,10 @@ class BenefitResource(
     /**
      * `GET  /benefits` : get all the benefits.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the [ResponseEntity] with status `200 (OK)` and the list of benefits in body.
      */
     @GetMapping("/benefits")    
-    fun getAllBenefits(@RequestParam(required = false, defaultValue = "false") eagerload: Boolean): MutableList<Benefit> {
+    fun getAllBenefits(): MutableList<Benefit> {
         log.debug("REST request to get all Benefits")
         return benefitService.findAll()
     }

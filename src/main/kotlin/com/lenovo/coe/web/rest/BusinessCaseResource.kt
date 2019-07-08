@@ -79,12 +79,11 @@ class BusinessCaseResource(
     /**
      * `GET  /business-cases` : get all the businessCases.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @param filter the filter of the request.
      * @return the [ResponseEntity] with status `200 (OK)` and the list of businessCases in body.
      */
     @GetMapping("/business-cases")    
-    fun getAllBusinessCases(@RequestParam(required = false) filter: String?,@RequestParam(required = false, defaultValue = "false") eagerload: Boolean): MutableList<BusinessCase> {
+    fun getAllBusinessCases(@RequestParam(required = false) filter: String?): MutableList<BusinessCase> {
         if ("project-is-null".equals(filter)) {
             log.debug("REST request to get all BusinessCases where project is null")
             return businessCaseService.findAllWhereProjectIsNull()

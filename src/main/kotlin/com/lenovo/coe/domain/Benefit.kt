@@ -34,26 +34,12 @@ class Benefit(
     var type: BenefitType? = null,
 
     @DBRef
-    @Field("fields")
-    var fields: MutableSet<Field> = mutableSetOf(),
-
-    @DBRef
     @Field("businessCase")
     @JsonIgnoreProperties("benefits")
     var businessCase: BusinessCase? = null
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
-
-    fun addField(field: Field): Benefit {
-        this.fields.add(field)
-        return this
-    }
-
-    fun removeField(field: Field): Benefit {
-        this.fields.remove(field)
-        return this
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     override fun equals(other: Any?): Boolean {

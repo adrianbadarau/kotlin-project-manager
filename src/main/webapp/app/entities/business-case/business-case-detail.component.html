@@ -9,12 +9,6 @@
                 <dd>
                     <span>{{businessCase.summary}}</span>
                 </dd>
-                <dt><span>Field</span></dt>
-                <dd>
-                    <span *ngFor="let field of businessCase.fields; let last = last">
-                        <a [routerLink]="['/field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
-                    </span>
-                </dd>
             </dl>
 
             <button type="submit"

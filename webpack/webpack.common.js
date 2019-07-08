@@ -75,7 +75,9 @@ module.exports = (options) => ({
             { from: './src/main/webapp/favicon.ico', to: 'favicon.ico' },
             { from: './src/main/webapp/manifest.webapp', to: 'manifest.webapp' },
             // jhipster-needle-add-assets-to-webpack - JHipster will add/remove third-party resources in this array
-            { from: './src/main/webapp/robots.txt', to: 'robots.txt' }
+            { from: './src/main/webapp/robots.txt', to: 'robots.txt' },
+            { from: './node_modules/chart.js/dist/Chart.js', to: 'Chart.js' },
+            { from: './node_modules/quill/dist/quill.js', to: 'quill.js' }
         ]),
         new HtmlWebpackPlugin({
             template: './src/main/webapp/index.html',

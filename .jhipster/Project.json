@@ -63,14 +63,6 @@
         },
         {
             "relationshipType": "many-to-many",
-            "otherEntityName": "field",
-            "otherEntityRelationshipName": "project",
-            "relationshipName": "field",
-            "otherEntityField": "id",
-            "ownerSide": true
-        },
-        {
-            "relationshipType": "many-to-many",
             "otherEntityName": "performance",
             "otherEntityRelationshipName": "project",
             "relationshipName": "performance",
@@ -78,7 +70,7 @@
             "ownerSide": true
         }
     ],
-    "changelogDate": "20190708111517",
+    "changelogDate": "20190708122458",
     "entityTableName": "project",
     "dto": "no",
     "pagination": "no",

@@ -2,7 +2,6 @@ import { Moment } from 'moment';
 import { IBusinessCase } from 'app/shared/model/business-case.model';
 import { ITeam } from 'app/shared/model/team.model';
 import { IDelivrable } from 'app/shared/model/delivrable.model';
-import { IField } from 'app/shared/model/field.model';
 import { IPerformance } from 'app/shared/model/performance.model';
 
 export interface IProject {
@@ -16,7 +15,6 @@ export interface IProject {
   businessCase?: IBusinessCase;
   teams?: ITeam[];
   delivrables?: IDelivrable[];
-  fields?: IField[];
   performances?: IPerformance[];
 }
 
@@ -32,7 +30,6 @@ export class Project implements IProject {
     public businessCase?: IBusinessCase,
     public teams?: ITeam[],
     public delivrables?: IDelivrable[],
-    public fields?: IField[],
     public performances?: IPerformance[]
   ) {}
 }

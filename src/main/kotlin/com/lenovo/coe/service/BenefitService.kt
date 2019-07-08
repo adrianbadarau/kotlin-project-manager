@@ -4,8 +4,6 @@ import com.lenovo.coe.domain.Benefit
 import com.lenovo.coe.repository.BenefitRepository
 import org.slf4j.LoggerFactory
 
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 import java.util.Optional
@@ -38,17 +36,8 @@ class BenefitService(
      */
     fun findAll(): MutableList<Benefit> {
         log.debug("Request to get all Benefits")
-        return benefitRepository.findAllWithEagerRelationships()
+        return benefitRepository.findAll()
     }
-
-    /**
-     * Get all the benefits with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    fun findAllWithEagerRelationships(pageable: Pageable) =
-        benefitRepository.findAllWithEagerRelationships(pageable)
-
 
     /**
      * Get one benefit by id.
@@ -58,7 +47,7 @@ class BenefitService(
      */
     fun findOne(id: String): Optional<Benefit> {
         log.debug("Request to get Benefit : {}", id)
-        return benefitRepository.findOneWithEagerRelationships(id)
+        return benefitRepository.findById(id)
     }
 
     /**

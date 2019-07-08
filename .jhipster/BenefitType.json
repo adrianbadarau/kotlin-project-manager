@@ -10,7 +10,7 @@
         }
     ],
     "relationships": [],
-    "changelogDate": "20190708111520",
+    "changelogDate": "20190708122501",
     "entityTableName": "benefit_type",
     "dto": "no",
     "pagination": "no",

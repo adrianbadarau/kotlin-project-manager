@@ -10,11 +10,9 @@ import kotlin.test.assertNotNull
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.MediaType
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -27,11 +25,6 @@ import java.time.temporal.ChronoUnit
 
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.hasItem
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.reset
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -51,12 +44,6 @@ class DelivrableResourceIT {
 
     @Autowired
     private lateinit var delivrableRepository: DelivrableRepository
-
-    @Mock
-    private lateinit var delivrableRepositoryMock: DelivrableRepository
-
-    @Mock
-    private lateinit var delivrableServiceMock: DelivrableService
 
     @Autowired
     private lateinit var delivrableService: DelivrableService
@@ -204,39 +191,6 @@ class DelivrableResourceIT {
             .andExpect(jsonPath("$.[*].target").value(hasItem(DEFAULT_TARGET.toString())))
     }
     
-    @Suppress("unchecked")
-    fun getAllDelivrablesWithEagerRelationshipsIsEnabled() {
-        val delivrableResource = DelivrableResource(delivrableServiceMock)
-        `when`(delivrableServiceMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
-
-        val restDelivrableMockMvc = MockMvcBuilders.standaloneSetup(delivrableResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build()
-
-        restDelivrableMockMvc.perform(get("/api/delivrables?eagerload=true"))
-            .andExpect(status().isOk)
-
-        verify(delivrableServiceMock, times(1)).findAllWithEagerRelationships(any())
-    }
-
-    @Suppress("unchecked")
-    fun getAllDelivrablesWithEagerRelationshipsIsNotEnabled() {
-        val delivrableResource = DelivrableResource(delivrableServiceMock)
-            `when`(delivrableServiceMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
-        val restDelivrableMockMvc = MockMvcBuilders.standaloneSetup(delivrableResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build()
-
-        restDelivrableMockMvc.perform(get("/api/delivrables?eagerload=true"))
-            .andExpect(status().isOk)
-
-        verify(delivrableServiceMock, times(1)).findAllWithEagerRelationships(any())
-    }
-
     @Test
     fun getDelivrable() {
         // Initialize the database

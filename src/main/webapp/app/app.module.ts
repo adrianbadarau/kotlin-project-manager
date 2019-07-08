@@ -20,6 +20,9 @@ import { PmAppEntityModule } from './entities/entity.module';
 import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
+import { MainCustomComponent } from 'app/layouts/main-custom/main-custom.component';
+import { MenuModule, PanelMenuModule } from 'primeng/primeng';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -36,9 +39,12 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
     PmAppAccountModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     PmAppEntityModule,
-    PmAppAppRoutingModule
+    PmAppAppRoutingModule,
+    PanelMenuModule,
+    MenuModule,
+    BrowserAnimationsModule
   ],
-  declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
+  declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent, MainCustomComponent],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -61,7 +67,7 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
       multi: true
     }
   ],
-  bootstrap: [JhiMainComponent]
+  bootstrap: [MainCustomComponent]
 })
 export class PmAppAppModule {
   constructor(private dpConfig: NgbDatepickerConfig) {

@@ -60,10 +60,6 @@ class Project(
     var delivrables: MutableSet<Delivrable> = mutableSetOf(),
 
     @DBRef
-    @Field("fields")
-    var fields: MutableSet<Field> = mutableSetOf(),
-
-    @DBRef
     @Field("performances")
     var performances: MutableSet<Performance> = mutableSetOf()
 
@@ -91,16 +87,6 @@ class Project(
     fun removeDelivrable(delivrable: Delivrable): Project {
         this.delivrables.remove(delivrable)
         delivrable.project = null
-        return this
-    }
-
-    fun addField(field: Field): Project {
-        this.fields.add(field)
-        return this
-    }
-
-    fun removeField(field: Field): Project {
-        this.fields.remove(field)
         return this
     }
 

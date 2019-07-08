@@ -11,8 +11,6 @@ import { IProject, Project } from 'app/shared/model/project.model';
 import { ProjectService } from './project.service';
 import { IBusinessCase } from 'app/shared/model/business-case.model';
 import { BusinessCaseService } from 'app/entities/business-case';
-import { IField } from 'app/shared/model/field.model';
-import { FieldService } from 'app/entities/field';
 import { IPerformance } from 'app/shared/model/performance.model';
 import { PerformanceService } from 'app/entities/performance';
 
@@ -25,8 +23,6 @@ export class ProjectUpdateComponent implements OnInit {
 
   businesscases: IBusinessCase[];
 
-  fields: IField[];
-
   performances: IPerformance[];
 
   editForm = this.fb.group({
@@ -38,7 +34,6 @@ export class ProjectUpdateComponent implements OnInit {
     risk: [null, [Validators.required]],
     benefitMesurement: [],
     businessCase: [],
-    fields: [],
     performances: []
   });
 
@@ -46,7 +41,6 @@ export class ProjectUpdateComponent implements OnInit {
     protected jhiAlertService: JhiAlertService,
     protected projectService: ProjectService,
     protected businessCaseService: BusinessCaseService,
-    protected fieldService: FieldService,
     protected performanceService: PerformanceService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -82,13 +76,6 @@ export class ProjectUpdateComponent implements OnInit {
         },
         (res: HttpErrorResponse) => this.onError(res.message)
       );
-    this.fieldService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IField[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IField[]>) => response.body)
-      )
-      .subscribe((res: IField[]) => (this.fields = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.performanceService
       .query()
       .pipe(
@@ -108,7 +95,6 @@ export class ProjectUpdateComponent implements OnInit {
       risk: project.risk,
       benefitMesurement: project.benefitMesurement,
       businessCase: project.businessCase,
-      fields: project.fields,
       performances: project.performances
     });
   }
@@ -138,7 +124,6 @@ export class ProjectUpdateComponent implements OnInit {
       risk: this.editForm.get(['risk']).value,
       benefitMesurement: this.editForm.get(['benefitMesurement']).value,
       businessCase: this.editForm.get(['businessCase']).value,
-      fields: this.editForm.get(['fields']).value,
       performances: this.editForm.get(['performances']).value
     };
   }
@@ -160,10 +145,6 @@ export class ProjectUpdateComponent implements OnInit {
   }
 
   trackBusinessCaseById(index: number, item: IBusinessCase) {
-    return item.id;
-  }
-
-  trackFieldById(index: number, item: IField) {
     return item.id;
   }
 

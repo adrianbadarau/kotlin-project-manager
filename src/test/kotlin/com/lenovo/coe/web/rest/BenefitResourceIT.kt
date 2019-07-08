@@ -10,11 +10,9 @@ import kotlin.test.assertNotNull
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.MediaType
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -25,11 +23,6 @@ import org.springframework.validation.Validator
 
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.hasItem
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.reset
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -49,12 +42,6 @@ class BenefitResourceIT {
 
     @Autowired
     private lateinit var benefitRepository: BenefitRepository
-
-    @Mock
-    private lateinit var benefitRepositoryMock: BenefitRepository
-
-    @Mock
-    private lateinit var benefitServiceMock: BenefitService
 
     @Autowired
     private lateinit var benefitService: BenefitService
@@ -162,39 +149,6 @@ class BenefitResourceIT {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
     }
     
-    @Suppress("unchecked")
-    fun getAllBenefitsWithEagerRelationshipsIsEnabled() {
-        val benefitResource = BenefitResource(benefitServiceMock)
-        `when`(benefitServiceMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
-
-        val restBenefitMockMvc = MockMvcBuilders.standaloneSetup(benefitResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build()
-
-        restBenefitMockMvc.perform(get("/api/benefits?eagerload=true"))
-            .andExpect(status().isOk)
-
-        verify(benefitServiceMock, times(1)).findAllWithEagerRelationships(any())
-    }
-
-    @Suppress("unchecked")
-    fun getAllBenefitsWithEagerRelationshipsIsNotEnabled() {
-        val benefitResource = BenefitResource(benefitServiceMock)
-            `when`(benefitServiceMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
-        val restBenefitMockMvc = MockMvcBuilders.standaloneSetup(benefitResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build()
-
-        restBenefitMockMvc.perform(get("/api/benefits?eagerload=true"))
-            .andExpect(status().isOk)
-
-        verify(benefitServiceMock, times(1)).findAllWithEagerRelationships(any())
-    }
-
     @Test
     fun getBenefit() {
         // Initialize the database

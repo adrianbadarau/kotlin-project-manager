@@ -29,7 +29,6 @@
             <th><span>Result</span></th>
             <th><span>Status</span></th>
             <th><span>Owner</span></th>
-            <th><span>Field</span></th>
             <th><span>Project Update</span></th>
             <th><span>Performance</span></th>
             <th><span>Comment</span></th>
@@ -56,11 +55,6 @@
                 </td>
                 <td>
                     {{milestone.owner?.id}}
-                </td>
-                <td>
-                    <span *ngFor="let field of milestone.fields; let last = last">
-                            <a class="form-control-static" [routerLink]="['../field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
-                        </span>
                 </td>
                 <td>
                     <span *ngFor="let projectUpdate of milestone.projectUpdates; let last = last">

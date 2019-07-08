@@ -25,10 +25,6 @@ class BusinessCase(
     var benefits: MutableSet<Benefit> = mutableSetOf(),
 
     @DBRef
-    @Field("fields")
-    var fields: MutableSet<Field> = mutableSetOf(),
-
-    @DBRef
     @Field("project")
     @com.fasterxml.jackson.annotation.JsonBackReference
     var project: Project? = null
@@ -45,16 +41,6 @@ class BusinessCase(
     fun removeBenefit(benefit: Benefit): BusinessCase {
         this.benefits.remove(benefit)
         benefit.businessCase = null
-        return this
-    }
-
-    fun addField(field: Field): BusinessCase {
-        this.fields.add(field)
-        return this
-    }
-
-    fun removeField(field: Field): BusinessCase {
-        this.fields.remove(field)
         return this
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove

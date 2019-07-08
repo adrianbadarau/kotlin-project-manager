@@ -72,7 +72,7 @@
             "otherEntityField": "id"
         }
     ],
-    "changelogDate": "20190708111524",
+    "changelogDate": "20190708122505",
     "entityTableName": "task",
     "dto": "no",
     "pagination": "no",

@@ -23,7 +23,7 @@
             "relationshipName": "task"
         }
     ],
-    "changelogDate": "20190708111523",
+    "changelogDate": "20190708122504",
     "entityTableName": "status",
     "dto": "no",
     "pagination": "no",

@@ -42,10 +42,6 @@ class Delivrable(
     var milestones: MutableSet<Milestone> = mutableSetOf(),
 
     @DBRef
-    @Field("fields")
-    var fields: MutableSet<Field> = mutableSetOf(),
-
-    @DBRef
     @Field("project")
     @JsonIgnoreProperties("delivrables")
     var project: Project? = null
@@ -62,16 +58,6 @@ class Delivrable(
     fun removeMilestone(milestone: Milestone): Delivrable {
         this.milestones.remove(milestone)
         milestone.delivrable = null
-        return this
-    }
-
-    fun addField(field: Field): Delivrable {
-        this.fields.add(field)
-        return this
-    }
-
-    fun removeField(field: Field): Delivrable {
-        this.fields.remove(field)
         return this
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove

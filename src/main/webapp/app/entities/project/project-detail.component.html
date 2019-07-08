@@ -35,12 +35,6 @@
                         <a [routerLink]="['/business-case', project.businessCase?.id, 'view']">{{project.businessCase?.id}}</a>
                     </div>
                 </dd>
-                <dt><span>Field</span></dt>
-                <dd>
-                    <span *ngFor="let field of project.fields; let last = last">
-                        <a [routerLink]="['/field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
-                    </span>
-                </dd>
                 <dt><span>Performance</span></dt>
                 <dd>
                     <span *ngFor="let performance of project.performances; let last = last">

@@ -80,11 +80,10 @@ class DelivrableResource(
     /**
      * `GET  /delivrables` : get all the delivrables.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the [ResponseEntity] with status `200 (OK)` and the list of delivrables in body.
      */
     @GetMapping("/delivrables")    
-    fun getAllDelivrables(@RequestParam(required = false, defaultValue = "false") eagerload: Boolean): MutableList<Delivrable> {
+    fun getAllDelivrables(): MutableList<Delivrable> {
         log.debug("REST request to get all Delivrables")
         return delivrableService.findAll()
     }

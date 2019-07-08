@@ -8,16 +8,8 @@ export interface ITeam {
   tasks?: ITask[];
   users?: IUser[];
   project?: IProject;
-  tasks?: ITask[];
 }
 
 export class Team implements ITeam {
-  constructor(
-    public id?: string,
-    public name?: string,
-    public tasks?: ITask[],
-    public users?: IUser[],
-    public project?: IProject,
-    public tasks?: ITask[]
-  ) {}
+  constructor(public id?: string, public name?: string, public tasks?: ITask[], public users?: IUser[], public project?: IProject) {}
 }

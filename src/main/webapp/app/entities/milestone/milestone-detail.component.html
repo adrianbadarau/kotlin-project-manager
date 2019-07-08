@@ -51,12 +51,6 @@
                 <dd>
                     {{milestone.owner?.id}}
                 </dd>
-                <dt><span>Field</span></dt>
-                <dd>
-                    <span *ngFor="let field of milestone.fields; let last = last">
-                        <a [routerLink]="['/field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
-                    </span>
-                </dd>
                 <dt><span>Project Update</span></dt>
                 <dd>
                     <span *ngFor="let projectUpdate of milestone.projectUpdates; let last = last">

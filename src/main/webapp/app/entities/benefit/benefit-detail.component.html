@@ -15,12 +15,6 @@
                         <a [routerLink]="['/benefit-type', benefit.type?.id, 'view']">{{benefit.type?.id}}</a>
                     </div>
                 </dd>
-                <dt><span>Field</span></dt>
-                <dd>
-                    <span *ngFor="let field of benefit.fields; let last = last">
-                        <a [routerLink]="['/field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
-                    </span>
-                </dd>
                 <dt><span>Business Case</span></dt>
                 <dd>
                     <div *ngIf="benefit.businessCase">

@@ -4,8 +4,6 @@ import com.lenovo.coe.domain.BusinessCase
 import com.lenovo.coe.repository.BusinessCaseRepository
 import org.slf4j.LoggerFactory
 
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 import java.util.Optional
@@ -38,17 +36,8 @@ class BusinessCaseService(
      */
     fun findAll(): MutableList<BusinessCase> {
         log.debug("Request to get all BusinessCases")
-        return businessCaseRepository.findAllWithEagerRelationships()
+        return businessCaseRepository.findAll()
     }
-
-    /**
-     * Get all the businessCases with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    fun findAllWithEagerRelationships(pageable: Pageable) =
-        businessCaseRepository.findAllWithEagerRelationships(pageable)
-
 
 
     /**
@@ -69,7 +58,7 @@ class BusinessCaseService(
      */
     fun findOne(id: String): Optional<BusinessCase> {
         log.debug("Request to get BusinessCase : {}", id)
-        return businessCaseRepository.findOneWithEagerRelationships(id)
+        return businessCaseRepository.findById(id)
     }
 
     /**

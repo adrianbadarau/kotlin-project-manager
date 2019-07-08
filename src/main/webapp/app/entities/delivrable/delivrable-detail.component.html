@@ -17,12 +17,6 @@
                 <dd>
                     <span>{{delivrable.target}}</span>
                 </dd>
-                <dt><span>Field</span></dt>
-                <dd>
-                    <span *ngFor="let field of delivrable.fields; let last = last">
-                        <a [routerLink]="['/field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
-                    </span>
-                </dd>
                 <dt><span>Project</span></dt>
                 <dd>
                     <div *ngIf="delivrable.project">

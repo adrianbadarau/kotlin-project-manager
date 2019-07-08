@@ -9,8 +9,6 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 import { IDelivrable, Delivrable } from 'app/shared/model/delivrable.model';
 import { DelivrableService } from './delivrable.service';
-import { IField } from 'app/shared/model/field.model';
-import { FieldService } from 'app/entities/field';
 import { IProject } from 'app/shared/model/project.model';
 import { ProjectService } from 'app/entities/project';
 
@@ -21,8 +19,6 @@ import { ProjectService } from 'app/entities/project';
 export class DelivrableUpdateComponent implements OnInit {
   isSaving: boolean;
 
-  fields: IField[];
-
   projects: IProject[];
 
   editForm = this.fb.group({
@@ -30,14 +26,12 @@ export class DelivrableUpdateComponent implements OnInit {
     name: [null, [Validators.required]],
     description: [null, [Validators.required]],
     target: [null, [Validators.required]],
-    fields: [],
     project: []
   });
 
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected delivrableService: DelivrableService,
-    protected fieldService: FieldService,
     protected projectService: ProjectService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -48,13 +42,6 @@ export class DelivrableUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ delivrable }) => {
       this.updateForm(delivrable);
     });
-    this.fieldService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IField[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IField[]>) => response.body)
-      )
-      .subscribe((res: IField[]) => (this.fields = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.projectService
       .query()
       .pipe(
@@ -70,7 +57,6 @@ export class DelivrableUpdateComponent implements OnInit {
       name: delivrable.name,
       description: delivrable.description,
       target: delivrable.target != null ? delivrable.target.format(DATE_TIME_FORMAT) : null,
-      fields: delivrable.fields,
       project: delivrable.project
     });
   }
@@ -96,7 +82,6 @@ export class DelivrableUpdateComponent implements OnInit {
       name: this.editForm.get(['name']).value,
       description: this.editForm.get(['description']).value,
       target: this.editForm.get(['target']).value != null ? moment(this.editForm.get(['target']).value, DATE_TIME_FORMAT) : undefined,
-      fields: this.editForm.get(['fields']).value,
       project: this.editForm.get(['project']).value
     };
   }
@@ -117,22 +102,7 @@ export class DelivrableUpdateComponent implements OnInit {
     this.jhiAlertService.error(errorMessage, null, null);
   }
 
-  trackFieldById(index: number, item: IField) {
-    return item.id;
-  }
-
   trackProjectById(index: number, item: IProject) {
     return item.id;
-  }
-
-  getSelected(selectedVals: Array<any>, option: any) {
-    if (selectedVals) {
-      for (let i = 0; i < selectedVals.length; i++) {
-        if (option.id === selectedVals[i].id) {
-          return selectedVals[i];
-        }
-      }
-    }
-    return option;
   }
 }

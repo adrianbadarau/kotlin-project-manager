@@ -31,14 +31,6 @@
             "relationshipName": "milestone"
         },
         {
-            "relationshipType": "many-to-many",
-            "otherEntityName": "field",
-            "otherEntityRelationshipName": "delivrable",
-            "relationshipName": "field",
-            "otherEntityField": "id",
-            "ownerSide": true
-        },
-        {
             "relationshipType": "many-to-one",
             "otherEntityName": "project",
             "otherEntityRelationshipName": "delivrable",
@@ -46,7 +38,7 @@
             "otherEntityField": "id"
         }
     ],
-    "changelogDate": "20190708111522",
+    "changelogDate": "20190708122503",
     "entityTableName": "delivrable",
     "dto": "no",
     "pagination": "no",

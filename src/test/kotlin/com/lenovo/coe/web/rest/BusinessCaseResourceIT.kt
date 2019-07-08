@@ -10,11 +10,9 @@ import kotlin.test.assertNotNull
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.MediaType
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -25,11 +23,6 @@ import org.springframework.validation.Validator
 
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.hasItem
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.reset
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -49,12 +42,6 @@ class BusinessCaseResourceIT {
 
     @Autowired
     private lateinit var businessCaseRepository: BusinessCaseRepository
-
-    @Mock
-    private lateinit var businessCaseRepositoryMock: BusinessCaseRepository
-
-    @Mock
-    private lateinit var businessCaseServiceMock: BusinessCaseService
 
     @Autowired
     private lateinit var businessCaseService: BusinessCaseService
@@ -144,39 +131,6 @@ class BusinessCaseResourceIT {
             .andExpect(jsonPath("$.[*].summary").value(hasItem(DEFAULT_SUMMARY)))
     }
     
-    @Suppress("unchecked")
-    fun getAllBusinessCasesWithEagerRelationshipsIsEnabled() {
-        val businessCaseResource = BusinessCaseResource(businessCaseServiceMock)
-        `when`(businessCaseServiceMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
-
-        val restBusinessCaseMockMvc = MockMvcBuilders.standaloneSetup(businessCaseResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build()
-
-        restBusinessCaseMockMvc.perform(get("/api/business-cases?eagerload=true"))
-            .andExpect(status().isOk)
-
-        verify(businessCaseServiceMock, times(1)).findAllWithEagerRelationships(any())
-    }
-
-    @Suppress("unchecked")
-    fun getAllBusinessCasesWithEagerRelationshipsIsNotEnabled() {
-        val businessCaseResource = BusinessCaseResource(businessCaseServiceMock)
-            `when`(businessCaseServiceMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
-        val restBusinessCaseMockMvc = MockMvcBuilders.standaloneSetup(businessCaseResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build()
-
-        restBusinessCaseMockMvc.perform(get("/api/business-cases?eagerload=true"))
-            .andExpect(status().isOk)
-
-        verify(businessCaseServiceMock, times(1)).findAllWithEagerRelationships(any())
-    }
-
     @Test
     fun getBusinessCase() {
         // Initialize the database

@@ -69,10 +69,6 @@ class Milestone(
     var owner: User? = null,
 
     @DBRef
-    @Field("fields")
-    var fields: MutableSet<Field> = mutableSetOf(),
-
-    @DBRef
     @Field("projectUpdates")
     var projectUpdates: MutableSet<ProjectUpdate> = mutableSetOf(),
 
@@ -101,16 +97,6 @@ class Milestone(
     fun removeTask(task: Task): Milestone {
         this.tasks.remove(task)
         task.milestone = null
-        return this
-    }
-
-    fun addField(field: Field): Milestone {
-        this.fields.add(field)
-        return this
-    }
-
-    fun removeField(field: Field): Milestone {
-        this.fields.remove(field)
         return this
     }
 

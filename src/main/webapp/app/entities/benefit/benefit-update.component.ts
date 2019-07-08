@@ -9,8 +9,6 @@ import { IBenefit, Benefit } from 'app/shared/model/benefit.model';
 import { BenefitService } from './benefit.service';
 import { IBenefitType } from 'app/shared/model/benefit-type.model';
 import { BenefitTypeService } from 'app/entities/benefit-type';
-import { IField } from 'app/shared/model/field.model';
-import { FieldService } from 'app/entities/field';
 import { IBusinessCase } from 'app/shared/model/business-case.model';
 import { BusinessCaseService } from 'app/entities/business-case';
 
@@ -23,15 +21,12 @@ export class BenefitUpdateComponent implements OnInit {
 
   benefittypes: IBenefitType[];
 
-  fields: IField[];
-
   businesscases: IBusinessCase[];
 
   editForm = this.fb.group({
     id: [],
     description: [null, [Validators.required]],
     type: [],
-    fields: [],
     businessCase: []
   });
 
@@ -39,7 +34,6 @@ export class BenefitUpdateComponent implements OnInit {
     protected jhiAlertService: JhiAlertService,
     protected benefitService: BenefitService,
     protected benefitTypeService: BenefitTypeService,
-    protected fieldService: FieldService,
     protected businessCaseService: BusinessCaseService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -57,13 +51,6 @@ export class BenefitUpdateComponent implements OnInit {
         map((response: HttpResponse<IBenefitType[]>) => response.body)
       )
       .subscribe((res: IBenefitType[]) => (this.benefittypes = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.fieldService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IField[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IField[]>) => response.body)
-      )
-      .subscribe((res: IField[]) => (this.fields = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.businessCaseService
       .query()
       .pipe(
@@ -78,7 +65,6 @@ export class BenefitUpdateComponent implements OnInit {
       id: benefit.id,
       description: benefit.description,
       type: benefit.type,
-      fields: benefit.fields,
       businessCase: benefit.businessCase
     });
   }
@@ -103,7 +89,6 @@ export class BenefitUpdateComponent implements OnInit {
       id: this.editForm.get(['id']).value,
       description: this.editForm.get(['description']).value,
       type: this.editForm.get(['type']).value,
-      fields: this.editForm.get(['fields']).value,
       businessCase: this.editForm.get(['businessCase']).value
     };
   }
@@ -128,22 +113,7 @@ export class BenefitUpdateComponent implements OnInit {
     return item.id;
   }
 
-  trackFieldById(index: number, item: IField) {
-    return item.id;
-  }
-
   trackBusinessCaseById(index: number, item: IBusinessCase) {
     return item.id;
-  }
-
-  getSelected(selectedVals: Array<any>, option: any) {
-    if (selectedVals) {
-      for (let i = 0; i < selectedVals.length; i++) {
-        if (option.id === selectedVals[i].id) {
-          return selectedVals[i];
-        }
-      }
-    }
-    return option;
   }
 }

@@ -67,14 +67,6 @@
         },
         {
             "relationshipType": "many-to-many",
-            "otherEntityName": "field",
-            "otherEntityRelationshipName": "milestone",
-            "relationshipName": "field",
-            "otherEntityField": "id",
-            "ownerSide": true
-        },
-        {
-            "relationshipType": "many-to-many",
             "otherEntityName": "projectUpdate",
             "otherEntityRelationshipName": "milestone",
             "relationshipName": "projectUpdate",
@@ -105,7 +97,7 @@
             "otherEntityField": "id"
         }
     ],
-    "changelogDate": "20190708111521",
+    "changelogDate": "20190708122502",
     "entityTableName": "milestone",
     "dto": "no",
     "pagination": "no",

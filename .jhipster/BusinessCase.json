@@ -14,14 +14,6 @@
             "relationshipName": "benefit"
         },
         {
-            "relationshipType": "many-to-many",
-            "otherEntityName": "field",
-            "otherEntityRelationshipName": "businessCase",
-            "relationshipName": "field",
-            "otherEntityField": "id",
-            "ownerSide": true
-        },
-        {
             "relationshipType": "one-to-one",
             "otherEntityName": "project",
             "otherEntityRelationshipName": "businessCase",
@@ -29,7 +21,7 @@
             "ownerSide": false
         }
     ],
-    "changelogDate": "20190708111518",
+    "changelogDate": "20190708122459",
     "entityTableName": "business_case",
     "dto": "no",
     "pagination": "no",

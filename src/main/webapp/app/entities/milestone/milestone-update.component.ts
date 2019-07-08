@@ -12,8 +12,6 @@ import { MilestoneService } from './milestone.service';
 import { IStatus } from 'app/shared/model/status.model';
 import { StatusService } from 'app/entities/status';
 import { IUser, UserService } from 'app/core';
-import { IField } from 'app/shared/model/field.model';
-import { FieldService } from 'app/entities/field';
 import { IProjectUpdate } from 'app/shared/model/project-update.model';
 import { ProjectUpdateService } from 'app/entities/project-update';
 import { IPerformance } from 'app/shared/model/performance.model';
@@ -33,8 +31,6 @@ export class MilestoneUpdateComponent implements OnInit {
   statuses: IStatus[];
 
   users: IUser[];
-
-  fields: IField[];
 
   projectupdates: IProjectUpdate[];
 
@@ -57,7 +53,6 @@ export class MilestoneUpdateComponent implements OnInit {
     result: [],
     status: [],
     owner: [],
-    fields: [],
     projectUpdates: [],
     performances: [],
     comments: [],
@@ -69,7 +64,6 @@ export class MilestoneUpdateComponent implements OnInit {
     protected milestoneService: MilestoneService,
     protected statusService: StatusService,
     protected userService: UserService,
-    protected fieldService: FieldService,
     protected projectUpdateService: ProjectUpdateService,
     protected performanceService: PerformanceService,
     protected commentService: CommentService,
@@ -97,13 +91,6 @@ export class MilestoneUpdateComponent implements OnInit {
         map((response: HttpResponse<IUser[]>) => response.body)
       )
       .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.fieldService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IField[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IField[]>) => response.body)
-      )
-      .subscribe((res: IField[]) => (this.fields = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.projectUpdateService
       .query()
       .pipe(
@@ -148,7 +135,6 @@ export class MilestoneUpdateComponent implements OnInit {
       result: milestone.result,
       status: milestone.status,
       owner: milestone.owner,
-      fields: milestone.fields,
       projectUpdates: milestone.projectUpdates,
       performances: milestone.performances,
       comments: milestone.comments,
@@ -191,7 +177,6 @@ export class MilestoneUpdateComponent implements OnInit {
       result: this.editForm.get(['result']).value,
       status: this.editForm.get(['status']).value,
       owner: this.editForm.get(['owner']).value,
-      fields: this.editForm.get(['fields']).value,
       projectUpdates: this.editForm.get(['projectUpdates']).value,
       performances: this.editForm.get(['performances']).value,
       comments: this.editForm.get(['comments']).value,
@@ -220,10 +205,6 @@ export class MilestoneUpdateComponent implements OnInit {
   }
 
   trackUserById(index: number, item: IUser) {
-    return item.id;
-  }
-
-  trackFieldById(index: number, item: IField) {
     return item.id;
   }
 

@@ -2,7 +2,6 @@ import { Moment } from 'moment';
 import { ITask } from 'app/shared/model/task.model';
 import { IStatus } from 'app/shared/model/status.model';
 import { IUser } from 'app/core/user/user.model';
-import { IField } from 'app/shared/model/field.model';
 import { IProjectUpdate } from 'app/shared/model/project-update.model';
 import { IPerformance } from 'app/shared/model/performance.model';
 import { IComment } from 'app/shared/model/comment.model';
@@ -22,7 +21,6 @@ export interface IMilestone {
   tasks?: ITask[];
   status?: IStatus;
   owner?: IUser;
-  fields?: IField[];
   projectUpdates?: IProjectUpdate[];
   performances?: IPerformance[];
   comments?: IComment[];
@@ -44,7 +42,6 @@ export class Milestone implements IMilestone {
     public tasks?: ITask[],
     public status?: IStatus,
     public owner?: IUser,
-    public fields?: IField[],
     public projectUpdates?: IProjectUpdate[],
     public performances?: IPerformance[],
     public comments?: IComment[],

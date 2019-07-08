@@ -15,12 +15,6 @@
                            formControlName="summary"/>
                 </div>
 
-                <div class="form-group">
-                    <label for="field_fields">Field</label>
-                    <select class="form-control" id="field_fields" multiple name="fields" formControlName="fields">
-                        <option [ngValue]="getSelected(editForm.get('fields').value, fieldOption)" *ngFor="let fieldOption of fields; trackBy: trackFieldById">{{fieldOption.id}}</option>
-                    </select>
-                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

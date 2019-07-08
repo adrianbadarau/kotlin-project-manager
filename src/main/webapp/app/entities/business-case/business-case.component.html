@@ -19,7 +19,6 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Summary</span></th>
-            <th><span>Field</span></th>
             <th></th>
             </tr>
             </thead>
@@ -27,11 +26,6 @@
             <tr *ngFor="let businessCase of businessCases ;trackBy: trackId">
                 <td><a [routerLink]="['/business-case', businessCase.id, 'view' ]">{{businessCase.id}}</a></td>
                 <td>{{businessCase.summary}}</td>
-                <td>
-                    <span *ngFor="let field of businessCase.fields; let last = last">
-                            <a class="form-control-static" [routerLink]="['../field', field?.id, 'view' ]">{{field.id}}</a>{{last ? '' : ', '}}
-                        </span>
-                </td>
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"

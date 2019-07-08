@@ -29,9 +29,6 @@ class Team(
     @Field("name")
     var name: String? = null,
 
-    @DBRef
-    @Field("task")
-    var tasks: MutableSet<Task> = mutableSetOf(),
 
     @DBRef
     @Field("users")
@@ -50,17 +47,6 @@ class Team(
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
 
-    fun addTask(task: Task): Team {
-        this.tasks.add(task)
-        task.assignedTeam = this
-        return this
-    }
-
-    fun removeTask(task: Task): Team {
-        this.tasks.remove(task)
-        task.assignedTeam = null
-        return this
-    }
 
     fun addUser(user: User): Team {
         this.users.add(user)
