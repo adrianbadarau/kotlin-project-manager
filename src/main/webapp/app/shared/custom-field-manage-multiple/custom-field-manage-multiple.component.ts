@@ -13,6 +13,8 @@ export class CustomFieldManageMultipleComponent implements OnInit {
   selectedField: IField = new Field();
   cols: any[];
   displayDialog: boolean;
+  displayColumnDialog: boolean;
+  newColumnName: string;
 
   constructor() {}
 
@@ -24,6 +26,10 @@ export class CustomFieldManageMultipleComponent implements OnInit {
     this.newField = true;
     this.field = new Field();
     this.displayDialog = true;
+  }
+
+  onClickAddColumnButton() {
+    this.displayColumnDialog = true;
   }
 
   save() {
@@ -55,5 +61,13 @@ export class CustomFieldManageMultipleComponent implements OnInit {
       field[prop] = c[prop];
     }
     return field;
+  }
+
+  saveNewColumn() {
+    this.cols.push({
+      field: this.newColumnName.toLocaleLowerCase(),
+      header: this.newColumnName
+    });
+    this.displayColumnDialog = false;
   }
 }

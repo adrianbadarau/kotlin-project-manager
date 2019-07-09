@@ -1,7 +1,7 @@
 <p-table [columns]="cols" [value]="existingFields" selectionMode="single" [(selection)]="selectedField"
          (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
     <ng-template pTemplate="caption">
-        List of Cars
+        Custom Data Table
     </ng-template>
     <ng-template pTemplate="header" let-columns>
         <tr>
@@ -20,36 +20,21 @@
     </ng-template>
     <ng-template pTemplate="summary" let-rowData>
         <div style="text-align:left">
-            <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Add"></button>
+            <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Add Row"></button>
+            <button type="button" pButton icon="fa fa-plus" (click)="onClickAddColumnButton()" label="Add Column"></button>
         </div>
     </ng-template>
 </p-table>
 
-<p-dialog header="Car Details" [(visible)]="displayDialog" [responsive]="true" [modal]="true"
+<p-dialog header="Row Details" [(visible)]="displayDialog" [responsive]="true" [modal]="true"
           [style]="{width: '300px'}">
     <div class="ui-g ui-fluid" *ngIf="field">
-        <div class="ui-g-12">
+        <div class="ui-g-12" *ngFor="let col of cols">
             <div class="ui-g-4">
-                <label for="vin">Name</label>
+                <label for="{{col.field}}">{{col.header}}</label>
             </div>
             <div class="ui-g-8">
-                <input pInputText id="vin" [(ngModel)]="field.name"/>
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="year">Value</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="year" [(ngModel)]="field.data"/>
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="brand">ID</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="brand" [(ngModel)]="field.id" [disabled]="true"/>
+                <input pInputText id="{{col.field}}" [(ngModel)]="field[col.field]"/>
             </div>
         </div>
     </div>
@@ -57,6 +42,24 @@
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
             <button type="button" pButton icon="fa fa-close" (click)="delete()" label="Delete"></button>
             <button type="button" pButton icon="fa fa-check" (click)="save()" label="Save"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Add Column" [(visible)]="displayColumnDialog" [responsive]="true" [modal]="true">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="new-column">New Column Name</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="new-column" [(ngModel)]="newColumnName">
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-check" (click)="saveNewColumn()" label="Save"></button>
         </div>
     </p-footer>
 </p-dialog>
