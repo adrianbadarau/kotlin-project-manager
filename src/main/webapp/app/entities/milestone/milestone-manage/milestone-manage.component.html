@@ -1,0 +1,13 @@
+<div class="ui-g">
+    <div class="ui-g-4">
+        <input type="Milestone Name" pInputText [(ngModel)]="milestone.name"/>
+    </div>
+    <div class="ui-g-4">
+        <p-calendar [(ngModel)]="milestone.estimatedEndDate" [monthNavigator]="true" [yearNavigator]="true"
+                    yearRange="2019:2050" [placeholder]="'Estimated End Date'"></p-calendar>
+    </div>
+    <div class="ui-g-4">
+        <p-autoComplete [(ngModel)]="milestone.owner" [suggestions]="results" (completeMethod)="search($event)"
+                        field="owner" [size]="30" placeholder="Countries" [minLength]="1"></p-autoComplete>
+    </div>
+</div>
