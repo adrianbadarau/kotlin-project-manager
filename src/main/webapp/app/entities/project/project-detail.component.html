@@ -9,37 +9,27 @@
                 <dd>
                     <span>{{project.name}}</span>
                 </dd>
-                <dt><span>Objective</span></dt>
+                <dt><span>Code</span></dt>
                 <dd>
-                    <span>{{project.objective}}</span>
+                    <span>{{project.code}}</span>
                 </dd>
-                <dt><span>Target</span></dt>
+                <dt><span>Description</span></dt>
                 <dd>
-                    <span>{{project.target}}</span>
+                    <span>{{project.description}}</span>
                 </dd>
-                <dt><span>Budget</span></dt>
+                <dt><span>Estimated End Date</span></dt>
                 <dd>
-                    <span>{{project.budget}}</span>
+                    <span>{{project.estimatedEndDate}}</span>
                 </dd>
-                <dt><span>Risk</span></dt>
+                <dt><span>Owner</span></dt>
                 <dd>
-                    <span>{{project.risk}}</span>
+                    {{project.owner?.id}}
                 </dd>
-                <dt><span>Benefit Mesurement</span></dt>
+                <dt><span>Status</span></dt>
                 <dd>
-                    <span>{{project.benefitMesurement}}</span>
-                </dd>
-                <dt><span>Business Case</span></dt>
-                <dd>
-                    <div *ngIf="project.businessCase">
-                        <a [routerLink]="['/business-case', project.businessCase?.id, 'view']">{{project.businessCase?.id}}</a>
+                    <div *ngIf="project.status">
+                        <a [routerLink]="['/status', project.status?.id, 'view']">{{project.status?.id}}</a>
                     </div>
-                </dd>
-                <dt><span>Performance</span></dt>
-                <dd>
-                    <span *ngFor="let performance of project.performances; let last = last">
-                        <a [routerLink]="['/performance', performance?.id, 'view' ]">{{performance.id}}</a>{{last ? '' : ', '}}
-                    </span>
                 </dd>
             </dl>
 

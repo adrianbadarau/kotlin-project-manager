@@ -9,47 +9,21 @@
             ]
         },
         {
-            "fieldName": "target",
-            "fieldType": "Instant",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "description",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "workstream",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "code",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "track",
-            "fieldType": "String"
-        },
-        {
             "fieldName": "estimatedEndDate",
             "fieldType": "Instant"
         },
         {
-            "fieldName": "actualEndDate",
+            "fieldName": "endDate",
             "fieldType": "Instant"
-        },
-        {
-            "fieldName": "result",
-            "fieldType": "String"
         }
     ],
     "relationships": [
         {
-            "relationshipType": "one-to-many",
-            "otherEntityName": "task",
+            "relationshipType": "many-to-one",
+            "otherEntityName": "project",
             "otherEntityRelationshipName": "milestone",
-            "relationshipName": "task"
+            "relationshipName": "project",
+            "otherEntityField": "id"
         },
         {
             "relationshipType": "many-to-one",
@@ -59,27 +33,34 @@
             "otherEntityField": "id"
         },
         {
-            "relationshipType": "many-to-one",
+            "relationshipType": "many-to-many",
+            "otherEntityName": "team",
+            "otherEntityRelationshipName": "milestone",
+            "relationshipName": "team",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
             "otherEntityName": "user",
             "otherEntityRelationshipName": "milestone",
-            "relationshipName": "owner",
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipType": "many-to-many",
-            "otherEntityName": "projectUpdate",
-            "otherEntityRelationshipName": "milestone",
-            "relationshipName": "projectUpdate",
+            "relationshipName": "user",
             "otherEntityField": "id",
             "ownerSide": true
         },
         {
-            "relationshipType": "many-to-many",
-            "otherEntityName": "performance",
+            "relationshipType": "one-to-many",
+            "otherEntityName": "task",
             "otherEntityRelationshipName": "milestone",
-            "relationshipName": "performance",
+            "relationshipName": "task"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "attachment",
+            "otherEntityRelationshipName": "milestone",
+            "relationshipName": "attachment",
             "otherEntityField": "id",
-            "ownerSide": true
+            "ownerSide": false
         },
         {
             "relationshipType": "many-to-many",
@@ -87,21 +68,14 @@
             "otherEntityRelationshipName": "milestone",
             "relationshipName": "comment",
             "otherEntityField": "id",
-            "ownerSide": true
-        },
-        {
-            "relationshipType": "many-to-one",
-            "otherEntityName": "delivrable",
-            "otherEntityRelationshipName": "milestone",
-            "relationshipName": "delivrable",
-            "otherEntityField": "id"
+            "ownerSide": false
         }
     ],
-    "changelogDate": "20190708122502",
+    "changelogDate": "20190709150621",
     "entityTableName": "milestone",
     "dto": "no",
     "pagination": "no",
-    "service": "serviceClass",
+    "service": "no",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "clientRootFolder": "",

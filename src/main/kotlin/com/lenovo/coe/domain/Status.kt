@@ -28,6 +28,10 @@ class Status(
     var name: String? = null,
 
     @DBRef
+    @Field("project")
+    var projects: MutableSet<Project> = mutableSetOf(),
+
+    @DBRef
     @Field("milestone")
     var milestones: MutableSet<Milestone> = mutableSetOf(),
 
@@ -37,6 +41,18 @@ class Status(
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
+
+    fun addProject(project: Project): Status {
+        this.projects.add(project)
+        project.status = this
+        return this
+    }
+
+    fun removeProject(project: Project): Status {
+        this.projects.remove(project)
+        project.status = null
+        return this
+    }
 
     fun addMilestone(milestone: Milestone): Status {
         this.milestones.add(milestone)

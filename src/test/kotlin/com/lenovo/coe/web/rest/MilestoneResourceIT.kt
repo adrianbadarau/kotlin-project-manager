@@ -3,7 +3,6 @@ package com.lenovo.coe.web.rest
 import com.lenovo.coe.PmAppApp
 import com.lenovo.coe.domain.Milestone
 import com.lenovo.coe.repository.MilestoneRepository
-import com.lenovo.coe.service.MilestoneService
 import com.lenovo.coe.web.rest.errors.ExceptionTranslator
 
 import kotlin.test.assertNotNull
@@ -55,12 +54,6 @@ class MilestoneResourceIT {
     @Mock
     private lateinit var milestoneRepositoryMock: MilestoneRepository
 
-    @Mock
-    private lateinit var milestoneServiceMock: MilestoneService
-
-    @Autowired
-    private lateinit var milestoneService: MilestoneService
-
     @Autowired
     private lateinit var jacksonMessageConverter: MappingJackson2HttpMessageConverter
 
@@ -80,7 +73,7 @@ class MilestoneResourceIT {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        val milestoneResource = MilestoneResource(milestoneService)
+        val milestoneResource = MilestoneResource(milestoneRepository)
         this.restMilestoneMockMvc = MockMvcBuilders.standaloneSetup(milestoneResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -111,14 +104,8 @@ class MilestoneResourceIT {
         assertThat(milestoneList).hasSize(databaseSizeBeforeCreate + 1)
         val testMilestone = milestoneList[milestoneList.size - 1]
         assertThat(testMilestone.name).isEqualTo(DEFAULT_NAME)
-        assertThat(testMilestone.target).isEqualTo(DEFAULT_TARGET)
-        assertThat(testMilestone.description).isEqualTo(DEFAULT_DESCRIPTION)
-        assertThat(testMilestone.workstream).isEqualTo(DEFAULT_WORKSTREAM)
-        assertThat(testMilestone.code).isEqualTo(DEFAULT_CODE)
-        assertThat(testMilestone.track).isEqualTo(DEFAULT_TRACK)
         assertThat(testMilestone.estimatedEndDate).isEqualTo(DEFAULT_ESTIMATED_END_DATE)
-        assertThat(testMilestone.actualEndDate).isEqualTo(DEFAULT_ACTUAL_END_DATE)
-        assertThat(testMilestone.result).isEqualTo(DEFAULT_RESULT)
+        assertThat(testMilestone.endDate).isEqualTo(DEFAULT_END_DATE)
     }
 
     @Test
@@ -160,24 +147,6 @@ class MilestoneResourceIT {
     }
 
     @Test
-    fun checkTargetIsRequired() {
-        val databaseSizeBeforeTest = milestoneRepository.findAll().size
-        // set the field null
-        milestone.target = null
-
-        // Create the Milestone, which fails.
-
-        restMilestoneMockMvc.perform(
-            post("/api/milestones")
-                .contentType(APPLICATION_JSON_UTF8)
-                .content(convertObjectToJsonBytes(milestone))
-        ).andExpect(status().isBadRequest)
-
-        val milestoneList = milestoneRepository.findAll()
-        assertThat(milestoneList).hasSize(databaseSizeBeforeTest)
-    }
-
-    @Test
     fun getAllMilestones() {
         // Initialize the database
         milestoneRepository.save(milestone)
@@ -188,20 +157,14 @@ class MilestoneResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(milestone.id)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].target").value(hasItem(DEFAULT_TARGET.toString())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].workstream").value(hasItem(DEFAULT_WORKSTREAM)))
-            .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
-            .andExpect(jsonPath("$.[*].track").value(hasItem(DEFAULT_TRACK)))
             .andExpect(jsonPath("$.[*].estimatedEndDate").value(hasItem(DEFAULT_ESTIMATED_END_DATE.toString())))
-            .andExpect(jsonPath("$.[*].actualEndDate").value(hasItem(DEFAULT_ACTUAL_END_DATE.toString())))
-            .andExpect(jsonPath("$.[*].result").value(hasItem(DEFAULT_RESULT)))
+            .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
     }
     
     @Suppress("unchecked")
     fun getAllMilestonesWithEagerRelationshipsIsEnabled() {
-        val milestoneResource = MilestoneResource(milestoneServiceMock)
-        `when`(milestoneServiceMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
+        val milestoneResource = MilestoneResource(milestoneRepositoryMock)
+        `when`(milestoneRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
 
         val restMilestoneMockMvc = MockMvcBuilders.standaloneSetup(milestoneResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -212,13 +175,13 @@ class MilestoneResourceIT {
         restMilestoneMockMvc.perform(get("/api/milestones?eagerload=true"))
             .andExpect(status().isOk)
 
-        verify(milestoneServiceMock, times(1)).findAllWithEagerRelationships(any())
+        verify(milestoneRepositoryMock, times(1)).findAllWithEagerRelationships(any())
     }
 
     @Suppress("unchecked")
     fun getAllMilestonesWithEagerRelationshipsIsNotEnabled() {
-        val milestoneResource = MilestoneResource(milestoneServiceMock)
-            `when`(milestoneServiceMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
+        val milestoneResource = MilestoneResource(milestoneRepositoryMock)
+        `when`(milestoneRepositoryMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
         val restMilestoneMockMvc = MockMvcBuilders.standaloneSetup(milestoneResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -228,7 +191,7 @@ class MilestoneResourceIT {
         restMilestoneMockMvc.perform(get("/api/milestones?eagerload=true"))
             .andExpect(status().isOk)
 
-        verify(milestoneServiceMock, times(1)).findAllWithEagerRelationships(any())
+        verify(milestoneRepositoryMock, times(1)).findAllWithEagerRelationships(any())
     }
 
     @Test
@@ -245,14 +208,8 @@ class MilestoneResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(id))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.target").value(DEFAULT_TARGET.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
-            .andExpect(jsonPath("$.workstream").value(DEFAULT_WORKSTREAM))
-            .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
-            .andExpect(jsonPath("$.track").value(DEFAULT_TRACK))
             .andExpect(jsonPath("$.estimatedEndDate").value(DEFAULT_ESTIMATED_END_DATE.toString()))
-            .andExpect(jsonPath("$.actualEndDate").value(DEFAULT_ACTUAL_END_DATE.toString()))
-            .andExpect(jsonPath("$.result").value(DEFAULT_RESULT))
+            .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
     }
 
     @Test
@@ -265,7 +222,7 @@ class MilestoneResourceIT {
     @Test
     fun updateMilestone() {
         // Initialize the database
-        milestoneService.save(milestone)
+        milestoneRepository.save(milestone)
 
         val databaseSizeBeforeUpdate = milestoneRepository.findAll().size
 
@@ -274,14 +231,8 @@ class MilestoneResourceIT {
         assertNotNull(id)
         val updatedMilestone = milestoneRepository.findById(id).get()
         updatedMilestone.name = UPDATED_NAME
-        updatedMilestone.target = UPDATED_TARGET
-        updatedMilestone.description = UPDATED_DESCRIPTION
-        updatedMilestone.workstream = UPDATED_WORKSTREAM
-        updatedMilestone.code = UPDATED_CODE
-        updatedMilestone.track = UPDATED_TRACK
         updatedMilestone.estimatedEndDate = UPDATED_ESTIMATED_END_DATE
-        updatedMilestone.actualEndDate = UPDATED_ACTUAL_END_DATE
-        updatedMilestone.result = UPDATED_RESULT
+        updatedMilestone.endDate = UPDATED_END_DATE
 
         restMilestoneMockMvc.perform(
             put("/api/milestones")
@@ -294,14 +245,8 @@ class MilestoneResourceIT {
         assertThat(milestoneList).hasSize(databaseSizeBeforeUpdate)
         val testMilestone = milestoneList[milestoneList.size - 1]
         assertThat(testMilestone.name).isEqualTo(UPDATED_NAME)
-        assertThat(testMilestone.target).isEqualTo(UPDATED_TARGET)
-        assertThat(testMilestone.description).isEqualTo(UPDATED_DESCRIPTION)
-        assertThat(testMilestone.workstream).isEqualTo(UPDATED_WORKSTREAM)
-        assertThat(testMilestone.code).isEqualTo(UPDATED_CODE)
-        assertThat(testMilestone.track).isEqualTo(UPDATED_TRACK)
         assertThat(testMilestone.estimatedEndDate).isEqualTo(UPDATED_ESTIMATED_END_DATE)
-        assertThat(testMilestone.actualEndDate).isEqualTo(UPDATED_ACTUAL_END_DATE)
-        assertThat(testMilestone.result).isEqualTo(UPDATED_RESULT)
+        assertThat(testMilestone.endDate).isEqualTo(UPDATED_END_DATE)
     }
 
     @Test
@@ -325,7 +270,7 @@ class MilestoneResourceIT {
     @Test
     fun deleteMilestone() {
         // Initialize the database
-        milestoneService.save(milestone)
+        milestoneRepository.save(milestone)
 
         val databaseSizeBeforeDelete = milestoneRepository.findAll().size
 
@@ -362,29 +307,11 @@ class MilestoneResourceIT {
         private const val DEFAULT_NAME: String = "AAAAAAAAAA"
         private const val UPDATED_NAME = "BBBBBBBBBB"
 
-        private val DEFAULT_TARGET: Instant = Instant.ofEpochMilli(0L)
-        private val UPDATED_TARGET: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS)
-
-        private const val DEFAULT_DESCRIPTION: String = "AAAAAAAAAA"
-        private const val UPDATED_DESCRIPTION = "BBBBBBBBBB"
-
-        private const val DEFAULT_WORKSTREAM: String = "AAAAAAAAAA"
-        private const val UPDATED_WORKSTREAM = "BBBBBBBBBB"
-
-        private const val DEFAULT_CODE: String = "AAAAAAAAAA"
-        private const val UPDATED_CODE = "BBBBBBBBBB"
-
-        private const val DEFAULT_TRACK: String = "AAAAAAAAAA"
-        private const val UPDATED_TRACK = "BBBBBBBBBB"
-
         private val DEFAULT_ESTIMATED_END_DATE: Instant = Instant.ofEpochMilli(0L)
         private val UPDATED_ESTIMATED_END_DATE: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS)
 
-        private val DEFAULT_ACTUAL_END_DATE: Instant = Instant.ofEpochMilli(0L)
-        private val UPDATED_ACTUAL_END_DATE: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS)
-
-        private const val DEFAULT_RESULT: String = "AAAAAAAAAA"
-        private const val UPDATED_RESULT = "BBBBBBBBBB"
+        private val DEFAULT_END_DATE: Instant = Instant.ofEpochMilli(0L)
+        private val UPDATED_END_DATE: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS)
 
         /**
          * Create an entity for this test.
@@ -396,14 +323,8 @@ class MilestoneResourceIT {
         fun createEntity(): Milestone {
             val milestone = Milestone(
                 name = DEFAULT_NAME,
-                target = DEFAULT_TARGET,
-                description = DEFAULT_DESCRIPTION,
-                workstream = DEFAULT_WORKSTREAM,
-                code = DEFAULT_CODE,
-                track = DEFAULT_TRACK,
                 estimatedEndDate = DEFAULT_ESTIMATED_END_DATE,
-                actualEndDate = DEFAULT_ACTUAL_END_DATE,
-                result = DEFAULT_RESULT
+                endDate = DEFAULT_END_DATE
             )
 
             return milestone
@@ -419,14 +340,8 @@ class MilestoneResourceIT {
         fun createUpdatedEntity(): Milestone {
             val milestone = Milestone(
                 name = UPDATED_NAME,
-                target = UPDATED_TARGET,
-                description = UPDATED_DESCRIPTION,
-                workstream = UPDATED_WORKSTREAM,
-                code = UPDATED_CODE,
-                track = UPDATED_TRACK,
                 estimatedEndDate = UPDATED_ESTIMATED_END_DATE,
-                actualEndDate = UPDATED_ACTUAL_END_DATE,
-                result = UPDATED_RESULT
+                endDate = UPDATED_END_DATE
             )
 
             return milestone

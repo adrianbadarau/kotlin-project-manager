@@ -21,59 +21,25 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_target">Target</label>
-                    <div class="d-flex">
-                        <input id="field_target" type="datetime-local" class="form-control" name="target" formControlName="target" placeholder="YYYY-MM-DD HH:mm"/>
-                    </div>
-                    <div *ngIf="editForm.get('target').invalid && (editForm.get('target').dirty || editForm.get('target').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('target').errors.required">
-                        This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                            [hidden]="!editForm.get('target').errors?.ZonedDateTimelocal">
-                            This field should be a date and time.
-                        </small>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_description">Description</label>
-                    <input type="text" class="form-control" name="description" id="field_description"
-                           formControlName="description"/>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_workstream">Workstream</label>
-                    <input type="text" class="form-control" name="workstream" id="field_workstream"
-                           formControlName="workstream"/>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_code">Code</label>
-                    <input type="text" class="form-control" name="code" id="field_code"
-                           formControlName="code"/>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_track">Track</label>
-                    <input type="text" class="form-control" name="track" id="field_track"
-                           formControlName="track"/>
-                </div>
-                <div class="form-group">
                     <label class="form-control-label" for="field_estimatedEndDate">Estimated End Date</label>
                     <div class="d-flex">
                         <input id="field_estimatedEndDate" type="datetime-local" class="form-control" name="estimatedEndDate" formControlName="estimatedEndDate" placeholder="YYYY-MM-DD HH:mm"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_actualEndDate">Actual End Date</label>
+                    <label class="form-control-label" for="field_endDate">End Date</label>
                     <div class="d-flex">
-                        <input id="field_actualEndDate" type="datetime-local" class="form-control" name="actualEndDate" formControlName="actualEndDate" placeholder="YYYY-MM-DD HH:mm"/>
+                        <input id="field_endDate" type="datetime-local" class="form-control" name="endDate" formControlName="endDate" placeholder="YYYY-MM-DD HH:mm"/>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_result">Result</label>
-                    <input type="text" class="form-control" name="result" id="field_result"
-                           formControlName="result"/>
-                </div>
 
+                <div class="form-group">
+                    <label class="form-control-label" for="field_project">Project</label>
+                    <select class="form-control" id="field_project" name="project" formControlName="project">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="projectOption.id === editForm.get('project').value?.id ? editForm.get('project').value : projectOption" *ngFor="let projectOption of projects; trackBy: trackProjectById">{{projectOption.id}}</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_status">Status</label>
                     <select class="form-control" id="field_status" name="status" formControlName="status">
@@ -82,35 +48,15 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" for="field_owner">Owner</label>
-                    <select class="form-control" id="field_owner" name="owner" formControlName="owner">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="userOption.id === editForm.get('owner').value?.id ? editForm.get('owner').value : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                    <label for="field_teams">Team</label>
+                    <select class="form-control" id="field_teams" multiple name="teams" formControlName="teams">
+                        <option [ngValue]="getSelected(editForm.get('teams').value, teamOption)" *ngFor="let teamOption of teams; trackBy: trackTeamById">{{teamOption.id}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="field_projectUpdates">Project Update</label>
-                    <select class="form-control" id="field_projectUpdates" multiple name="projectUpdates" formControlName="projectUpdates">
-                        <option [ngValue]="getSelected(editForm.get('projectUpdates').value, projectUpdateOption)" *ngFor="let projectUpdateOption of projectupdates; trackBy: trackProjectUpdateById">{{projectUpdateOption.id}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="field_performances">Performance</label>
-                    <select class="form-control" id="field_performances" multiple name="performances" formControlName="performances">
-                        <option [ngValue]="getSelected(editForm.get('performances').value, performanceOption)" *ngFor="let performanceOption of performances; trackBy: trackPerformanceById">{{performanceOption.id}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="field_comments">Comment</label>
-                    <select class="form-control" id="field_comments" multiple name="comments" formControlName="comments">
-                        <option [ngValue]="getSelected(editForm.get('comments').value, commentOption)" *ngFor="let commentOption of comments; trackBy: trackCommentById">{{commentOption.id}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_delivrable">Delivrable</label>
-                    <select class="form-control" id="field_delivrable" name="delivrable" formControlName="delivrable">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="delivrableOption.id === editForm.get('delivrable').value?.id ? editForm.get('delivrable').value : delivrableOption" *ngFor="let delivrableOption of delivrables; trackBy: trackDelivrableById">{{delivrableOption.id}}</option>
+                    <label for="field_users">User</label>
+                    <select class="form-control" id="field_users" multiple name="users" formControlName="users">
+                        <option [ngValue]="getSelected(editForm.get('users').value, userOption)" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
                     </select>
                 </div>
             </div>

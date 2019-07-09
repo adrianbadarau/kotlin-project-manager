@@ -1,6 +1,5 @@
 package com.lenovo.coe.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.data.mongodb.core.mapping.Document
@@ -28,44 +27,48 @@ class Comment(
     @Field("body")
     var body: String? = null,
 
-    @get: NotNull
-    @Field("created_at")
-    var createdAt: Int? = null,
-
     @DBRef
-    @Field("tasks")
-    @JsonIgnore
-    var tasks: MutableSet<Task> = mutableSetOf(),
+    @Field("projects")
+    var projects: MutableSet<Project> = mutableSetOf(),
 
     @DBRef
     @Field("milestones")
-    @JsonIgnore
-    var milestones: MutableSet<Milestone> = mutableSetOf()
+    var milestones: MutableSet<Milestone> = mutableSetOf(),
+
+    @DBRef
+    @Field("tasks")
+    var tasks: MutableSet<Task> = mutableSetOf()
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
 
-    fun addTask(task: Task): Comment {
-        this.tasks.add(task)
-        task.comments.add(this)
+    fun addProject(project: Project): Comment {
+        this.projects.add(project)
         return this
     }
 
-    fun removeTask(task: Task): Comment {
-        this.tasks.remove(task)
-        task.comments.remove(this)
+    fun removeProject(project: Project): Comment {
+        this.projects.remove(project)
         return this
     }
 
     fun addMilestone(milestone: Milestone): Comment {
         this.milestones.add(milestone)
-        milestone.comments.add(this)
         return this
     }
 
     fun removeMilestone(milestone: Milestone): Comment {
         this.milestones.remove(milestone)
-        milestone.comments.remove(this)
+        return this
+    }
+
+    fun addTask(task: Task): Comment {
+        this.tasks.add(task)
+        return this
+    }
+
+    fun removeTask(task: Task): Comment {
+        this.tasks.remove(task)
         return this
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
@@ -83,7 +86,6 @@ class Comment(
     override fun toString() = "Comment{" +
         "id=$id" +
         ", body='$body'" +
-        ", createdAt=$createdAt" +
         "}"
 
 

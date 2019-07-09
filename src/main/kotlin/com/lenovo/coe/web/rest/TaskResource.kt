@@ -1,7 +1,7 @@
 package com.lenovo.coe.web.rest
 
 import com.lenovo.coe.domain.Task
-import com.lenovo.coe.service.TaskService
+import com.lenovo.coe.repository.TaskRepository
 import com.lenovo.coe.web.rest.errors.BadRequestAlertException
 
 import io.github.jhipster.web.util.HeaderUtil
@@ -29,7 +29,7 @@ import java.net.URISyntaxException
 @RestController
 @RequestMapping("/api")
 class TaskResource(
-    private val taskService: TaskService
+    private val taskRepository: TaskRepository
 ) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -50,7 +50,7 @@ class TaskResource(
         if (task.id != null) {
             throw BadRequestAlertException("A new task cannot already have an ID", ENTITY_NAME, "idexists")
         }
-        val result = taskService.save(task)
+        val result = taskRepository.save(task)
         return ResponseEntity.created(URI("/api/tasks/" + result.id))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.id.toString()))
             .body(result)
@@ -71,7 +71,7 @@ class TaskResource(
         if (task.id == null) {
             throw BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull")
         }
-        val result = taskService.save(task)
+        val result = taskRepository.save(task)
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, task.id.toString()))
             .body(result)
@@ -86,7 +86,7 @@ class TaskResource(
     @GetMapping("/tasks")    
     fun getAllTasks(@RequestParam(required = false, defaultValue = "false") eagerload: Boolean): MutableList<Task> {
         log.debug("REST request to get all Tasks")
-        return taskService.findAll()
+        return taskRepository.findAllWithEagerRelationships()
     }
 
     /**
@@ -98,7 +98,7 @@ class TaskResource(
     @GetMapping("/tasks/{id}")
     fun getTask(@PathVariable id: String): ResponseEntity<Task> {
         log.debug("REST request to get Task : {}", id)
-        val task = taskService.findOne(id)
+        val task = taskRepository.findOneWithEagerRelationships(id)
         return ResponseUtil.wrapOrNotFound(task)
     }
 
@@ -111,7 +111,8 @@ class TaskResource(
     @DeleteMapping("/tasks/{id}")
     fun deleteTask(@PathVariable id: String): ResponseEntity<Void> {
         log.debug("REST request to delete Task : {}", id)
-        taskService.delete(id)
+
+        taskRepository.deleteById(id)
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build()
     }
 

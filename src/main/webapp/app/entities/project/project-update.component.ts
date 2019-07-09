@@ -9,10 +9,13 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 import { IProject, Project } from 'app/shared/model/project.model';
 import { ProjectService } from './project.service';
-import { IBusinessCase } from 'app/shared/model/business-case.model';
-import { BusinessCaseService } from 'app/entities/business-case';
-import { IPerformance } from 'app/shared/model/performance.model';
-import { PerformanceService } from 'app/entities/performance';
+import { IUser, UserService } from 'app/core';
+import { IStatus } from 'app/shared/model/status.model';
+import { StatusService } from 'app/entities/status';
+import { IAttachment } from 'app/shared/model/attachment.model';
+import { AttachmentService } from 'app/entities/attachment';
+import { IComment } from 'app/shared/model/comment.model';
+import { CommentService } from 'app/entities/comment';
 
 @Component({
   selector: 'jhi-project-update',
@@ -21,27 +24,31 @@ import { PerformanceService } from 'app/entities/performance';
 export class ProjectUpdateComponent implements OnInit {
   isSaving: boolean;
 
-  businesscases: IBusinessCase[];
+  users: IUser[];
 
-  performances: IPerformance[];
+  statuses: IStatus[];
+
+  attachments: IAttachment[];
+
+  comments: IComment[];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
-    objective: [null, [Validators.required, Validators.minLength(10)]],
-    target: [null, [Validators.required]],
-    budget: [],
-    risk: [null, [Validators.required]],
-    benefitMesurement: [],
-    businessCase: [],
-    performances: []
+    code: [null, [Validators.required]],
+    description: [],
+    estimatedEndDate: [],
+    owner: [],
+    status: []
   });
 
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected projectService: ProjectService,
-    protected businessCaseService: BusinessCaseService,
-    protected performanceService: PerformanceService,
+    protected userService: UserService,
+    protected statusService: StatusService,
+    protected attachmentService: AttachmentService,
+    protected commentService: CommentService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -51,51 +58,45 @@ export class ProjectUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ project }) => {
       this.updateForm(project);
     });
-    this.businessCaseService
-      .query({ filter: 'project-is-null' })
-      .pipe(
-        filter((mayBeOk: HttpResponse<IBusinessCase[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IBusinessCase[]>) => response.body)
-      )
-      .subscribe(
-        (res: IBusinessCase[]) => {
-          if (!this.editForm.get('businessCase').value || !this.editForm.get('businessCase').value.id) {
-            this.businesscases = res;
-          } else {
-            this.businessCaseService
-              .find(this.editForm.get('businessCase').value.id)
-              .pipe(
-                filter((subResMayBeOk: HttpResponse<IBusinessCase>) => subResMayBeOk.ok),
-                map((subResponse: HttpResponse<IBusinessCase>) => subResponse.body)
-              )
-              .subscribe(
-                (subRes: IBusinessCase) => (this.businesscases = [subRes].concat(res)),
-                (subRes: HttpErrorResponse) => this.onError(subRes.message)
-              );
-          }
-        },
-        (res: HttpErrorResponse) => this.onError(res.message)
-      );
-    this.performanceService
+    this.userService
       .query()
       .pipe(
-        filter((mayBeOk: HttpResponse<IPerformance[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IPerformance[]>) => response.body)
+        filter((mayBeOk: HttpResponse<IUser[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IUser[]>) => response.body)
       )
-      .subscribe((res: IPerformance[]) => (this.performances = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.statusService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IStatus[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IStatus[]>) => response.body)
+      )
+      .subscribe((res: IStatus[]) => (this.statuses = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.attachmentService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IAttachment[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IAttachment[]>) => response.body)
+      )
+      .subscribe((res: IAttachment[]) => (this.attachments = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.commentService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IComment[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IComment[]>) => response.body)
+      )
+      .subscribe((res: IComment[]) => (this.comments = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(project: IProject) {
     this.editForm.patchValue({
       id: project.id,
       name: project.name,
-      objective: project.objective,
-      target: project.target != null ? project.target.format(DATE_TIME_FORMAT) : null,
-      budget: project.budget,
-      risk: project.risk,
-      benefitMesurement: project.benefitMesurement,
-      businessCase: project.businessCase,
-      performances: project.performances
+      code: project.code,
+      description: project.description,
+      estimatedEndDate: project.estimatedEndDate != null ? project.estimatedEndDate.format(DATE_TIME_FORMAT) : null,
+      owner: project.owner,
+      status: project.status
     });
   }
 
@@ -118,13 +119,14 @@ export class ProjectUpdateComponent implements OnInit {
       ...new Project(),
       id: this.editForm.get(['id']).value,
       name: this.editForm.get(['name']).value,
-      objective: this.editForm.get(['objective']).value,
-      target: this.editForm.get(['target']).value != null ? moment(this.editForm.get(['target']).value, DATE_TIME_FORMAT) : undefined,
-      budget: this.editForm.get(['budget']).value,
-      risk: this.editForm.get(['risk']).value,
-      benefitMesurement: this.editForm.get(['benefitMesurement']).value,
-      businessCase: this.editForm.get(['businessCase']).value,
-      performances: this.editForm.get(['performances']).value
+      code: this.editForm.get(['code']).value,
+      description: this.editForm.get(['description']).value,
+      estimatedEndDate:
+        this.editForm.get(['estimatedEndDate']).value != null
+          ? moment(this.editForm.get(['estimatedEndDate']).value, DATE_TIME_FORMAT)
+          : undefined,
+      owner: this.editForm.get(['owner']).value,
+      status: this.editForm.get(['status']).value
     };
   }
 
@@ -144,11 +146,19 @@ export class ProjectUpdateComponent implements OnInit {
     this.jhiAlertService.error(errorMessage, null, null);
   }
 
-  trackBusinessCaseById(index: number, item: IBusinessCase) {
+  trackUserById(index: number, item: IUser) {
     return item.id;
   }
 
-  trackPerformanceById(index: number, item: IPerformance) {
+  trackStatusById(index: number, item: IStatus) {
+    return item.id;
+  }
+
+  trackAttachmentById(index: number, item: IAttachment) {
+    return item.id;
+  }
+
+  trackCommentById(index: number, item: IComment) {
     return item.id;
   }
 

@@ -3,7 +3,6 @@ package com.lenovo.coe.web.rest
 import com.lenovo.coe.PmAppApp
 import com.lenovo.coe.domain.Team
 import com.lenovo.coe.repository.TeamRepository
-import com.lenovo.coe.service.TeamService
 import com.lenovo.coe.web.rest.errors.ExceptionTranslator
 
 import kotlin.test.assertNotNull
@@ -53,12 +52,6 @@ class TeamResourceIT {
     @Mock
     private lateinit var teamRepositoryMock: TeamRepository
 
-    @Mock
-    private lateinit var teamServiceMock: TeamService
-
-    @Autowired
-    private lateinit var teamService: TeamService
-
     @Autowired
     private lateinit var jacksonMessageConverter: MappingJackson2HttpMessageConverter
 
@@ -78,7 +71,7 @@ class TeamResourceIT {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        val teamResource = TeamResource(teamService)
+        val teamResource = TeamResource(teamRepository)
         this.restTeamMockMvc = MockMvcBuilders.standaloneSetup(teamResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -164,8 +157,8 @@ class TeamResourceIT {
     
     @Suppress("unchecked")
     fun getAllTeamsWithEagerRelationshipsIsEnabled() {
-        val teamResource = TeamResource(teamServiceMock)
-        `when`(teamServiceMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
+        val teamResource = TeamResource(teamRepositoryMock)
+        `when`(teamRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
 
         val restTeamMockMvc = MockMvcBuilders.standaloneSetup(teamResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -176,13 +169,13 @@ class TeamResourceIT {
         restTeamMockMvc.perform(get("/api/teams?eagerload=true"))
             .andExpect(status().isOk)
 
-        verify(teamServiceMock, times(1)).findAllWithEagerRelationships(any())
+        verify(teamRepositoryMock, times(1)).findAllWithEagerRelationships(any())
     }
 
     @Suppress("unchecked")
     fun getAllTeamsWithEagerRelationshipsIsNotEnabled() {
-        val teamResource = TeamResource(teamServiceMock)
-            `when`(teamServiceMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
+        val teamResource = TeamResource(teamRepositoryMock)
+        `when`(teamRepositoryMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
         val restTeamMockMvc = MockMvcBuilders.standaloneSetup(teamResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -192,7 +185,7 @@ class TeamResourceIT {
         restTeamMockMvc.perform(get("/api/teams?eagerload=true"))
             .andExpect(status().isOk)
 
-        verify(teamServiceMock, times(1)).findAllWithEagerRelationships(any())
+        verify(teamRepositoryMock, times(1)).findAllWithEagerRelationships(any())
     }
 
     @Test
@@ -221,7 +214,7 @@ class TeamResourceIT {
     @Test
     fun updateTeam() {
         // Initialize the database
-        teamService.save(team)
+        teamRepository.save(team)
 
         val databaseSizeBeforeUpdate = teamRepository.findAll().size
 
@@ -265,7 +258,7 @@ class TeamResourceIT {
     @Test
     fun deleteTeam() {
         // Initialize the database
-        teamService.save(team)
+        teamRepository.save(team)
 
         val databaseSizeBeforeDelete = teamRepository.findAll().size
 

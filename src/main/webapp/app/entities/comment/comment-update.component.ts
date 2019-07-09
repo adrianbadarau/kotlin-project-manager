@@ -7,10 +7,12 @@ import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { IComment, Comment } from 'app/shared/model/comment.model';
 import { CommentService } from './comment.service';
-import { ITask } from 'app/shared/model/task.model';
-import { TaskService } from 'app/entities/task';
+import { IProject } from 'app/shared/model/project.model';
+import { ProjectService } from 'app/entities/project';
 import { IMilestone } from 'app/shared/model/milestone.model';
 import { MilestoneService } from 'app/entities/milestone';
+import { ITask } from 'app/shared/model/task.model';
+import { TaskService } from 'app/entities/task';
 
 @Component({
   selector: 'jhi-comment-update',
@@ -19,21 +21,26 @@ import { MilestoneService } from 'app/entities/milestone';
 export class CommentUpdateComponent implements OnInit {
   isSaving: boolean;
 
-  tasks: ITask[];
+  projects: IProject[];
 
   milestones: IMilestone[];
+
+  tasks: ITask[];
 
   editForm = this.fb.group({
     id: [],
     body: [null, [Validators.required]],
-    createdAt: [null, [Validators.required]]
+    projects: [],
+    milestones: [],
+    tasks: []
   });
 
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected commentService: CommentService,
-    protected taskService: TaskService,
+    protected projectService: ProjectService,
     protected milestoneService: MilestoneService,
+    protected taskService: TaskService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -43,13 +50,13 @@ export class CommentUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ comment }) => {
       this.updateForm(comment);
     });
-    this.taskService
+    this.projectService
       .query()
       .pipe(
-        filter((mayBeOk: HttpResponse<ITask[]>) => mayBeOk.ok),
-        map((response: HttpResponse<ITask[]>) => response.body)
+        filter((mayBeOk: HttpResponse<IProject[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IProject[]>) => response.body)
       )
-      .subscribe((res: ITask[]) => (this.tasks = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: IProject[]) => (this.projects = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.milestoneService
       .query()
       .pipe(
@@ -57,13 +64,22 @@ export class CommentUpdateComponent implements OnInit {
         map((response: HttpResponse<IMilestone[]>) => response.body)
       )
       .subscribe((res: IMilestone[]) => (this.milestones = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.taskService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<ITask[]>) => mayBeOk.ok),
+        map((response: HttpResponse<ITask[]>) => response.body)
+      )
+      .subscribe((res: ITask[]) => (this.tasks = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(comment: IComment) {
     this.editForm.patchValue({
       id: comment.id,
       body: comment.body,
-      createdAt: comment.createdAt
+      projects: comment.projects,
+      milestones: comment.milestones,
+      tasks: comment.tasks
     });
   }
 
@@ -86,7 +102,9 @@ export class CommentUpdateComponent implements OnInit {
       ...new Comment(),
       id: this.editForm.get(['id']).value,
       body: this.editForm.get(['body']).value,
-      createdAt: this.editForm.get(['createdAt']).value
+      projects: this.editForm.get(['projects']).value,
+      milestones: this.editForm.get(['milestones']).value,
+      tasks: this.editForm.get(['tasks']).value
     };
   }
 
@@ -106,11 +124,15 @@ export class CommentUpdateComponent implements OnInit {
     this.jhiAlertService.error(errorMessage, null, null);
   }
 
-  trackTaskById(index: number, item: ITask) {
+  trackProjectById(index: number, item: IProject) {
     return item.id;
   }
 
   trackMilestoneById(index: number, item: IMilestone) {
+    return item.id;
+  }
+
+  trackTaskById(index: number, item: ITask) {
     return item.id;
   }
 

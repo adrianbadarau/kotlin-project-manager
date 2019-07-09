@@ -4,8 +4,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { take, map } from 'rxjs/operators';
-import * as moment from 'moment';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { TaskService } from 'app/entities/task/task.service';
 import { ITask, Task } from 'app/shared/model/task.model';
 
@@ -16,7 +14,6 @@ describe('Service Tests', () => {
     let httpMock: HttpTestingController;
     let elemDefault: ITask;
     let expectedResult;
-    let currentDate: moment.Moment;
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule]
@@ -25,19 +22,13 @@ describe('Service Tests', () => {
       injector = getTestBed();
       service = injector.get(TaskService);
       httpMock = injector.get(HttpTestingController);
-      currentDate = moment();
 
-      elemDefault = new Task('ID', 'AAAAAAA', currentDate, 'AAAAAAA');
+      elemDefault = new Task('ID', 'AAAAAAA', 'AAAAAAA', 0, 0);
     });
 
     describe('Service methods', () => {
       it('should find an element', async () => {
-        const returnedFromService = Object.assign(
-          {
-            estimatedDate: currentDate.format(DATE_TIME_FORMAT)
-          },
-          elemDefault
-        );
+        const returnedFromService = Object.assign({}, elemDefault);
         service
           .find('123')
           .pipe(take(1))
@@ -51,17 +42,11 @@ describe('Service Tests', () => {
       it('should create a Task', async () => {
         const returnedFromService = Object.assign(
           {
-            id: 'ID',
-            estimatedDate: currentDate.format(DATE_TIME_FORMAT)
+            id: 'ID'
           },
           elemDefault
         );
-        const expected = Object.assign(
-          {
-            estimatedDate: currentDate
-          },
-          returnedFromService
-        );
+        const expected = Object.assign({}, returnedFromService);
         service
           .create(new Task(null))
           .pipe(take(1))
@@ -75,18 +60,14 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            estimatedDate: currentDate.format(DATE_TIME_FORMAT),
-            details: 'BBBBBB'
+            description: 'BBBBBB',
+            estimatedTime: 1,
+            spentTime: 1
           },
           elemDefault
         );
 
-        const expected = Object.assign(
-          {
-            estimatedDate: currentDate
-          },
-          returnedFromService
-        );
+        const expected = Object.assign({}, returnedFromService);
         service
           .update(expected)
           .pipe(take(1))
@@ -100,17 +81,13 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            estimatedDate: currentDate.format(DATE_TIME_FORMAT),
-            details: 'BBBBBB'
+            description: 'BBBBBB',
+            estimatedTime: 1,
+            spentTime: 1
           },
           elemDefault
         );
-        const expected = Object.assign(
-          {
-            estimatedDate: currentDate
-          },
-          returnedFromService
-        );
+        const expected = Object.assign({}, returnedFromService);
         service
           .query(expected)
           .pipe(

@@ -1,35 +1,34 @@
 import { Moment } from 'moment';
-import { IBusinessCase } from 'app/shared/model/business-case.model';
-import { ITeam } from 'app/shared/model/team.model';
-import { IDelivrable } from 'app/shared/model/delivrable.model';
-import { IPerformance } from 'app/shared/model/performance.model';
+import { IUser } from 'app/core/user/user.model';
+import { IStatus } from 'app/shared/model/status.model';
+import { IMilestone } from 'app/shared/model/milestone.model';
+import { IAttachment } from 'app/shared/model/attachment.model';
+import { IComment } from 'app/shared/model/comment.model';
 
 export interface IProject {
   id?: string;
   name?: string;
-  objective?: string;
-  target?: Moment;
-  budget?: number;
-  risk?: string;
-  benefitMesurement?: string;
-  businessCase?: IBusinessCase;
-  teams?: ITeam[];
-  delivrables?: IDelivrable[];
-  performances?: IPerformance[];
+  code?: string;
+  description?: string;
+  estimatedEndDate?: Moment;
+  owner?: IUser;
+  status?: IStatus;
+  milestones?: IMilestone[];
+  attachments?: IAttachment[];
+  comments?: IComment[];
 }
 
 export class Project implements IProject {
   constructor(
     public id?: string,
     public name?: string,
-    public objective?: string,
-    public target?: Moment,
-    public budget?: number,
-    public risk?: string,
-    public benefitMesurement?: string,
-    public businessCase?: IBusinessCase,
-    public teams?: ITeam[],
-    public delivrables?: IDelivrable[],
-    public performances?: IPerformance[]
+    public code?: string,
+    public description?: string,
+    public estimatedEndDate?: Moment,
+    public owner?: IUser,
+    public status?: IStatus,
+    public milestones?: IMilestone[],
+    public attachments?: IAttachment[],
+    public comments?: IComment[]
   ) {}
 }

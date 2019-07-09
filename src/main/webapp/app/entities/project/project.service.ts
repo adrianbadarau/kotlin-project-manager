@@ -51,14 +51,14 @@ export class ProjectService {
 
   protected convertDateFromClient(project: IProject): IProject {
     const copy: IProject = Object.assign({}, project, {
-      target: project.target != null && project.target.isValid() ? project.target.toJSON() : null
+      estimatedEndDate: project.estimatedEndDate != null && project.estimatedEndDate.isValid() ? project.estimatedEndDate.toJSON() : null
     });
     return copy;
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.target = res.body.target != null ? moment(res.body.target) : null;
+      res.body.estimatedEndDate = res.body.estimatedEndDate != null ? moment(res.body.estimatedEndDate) : null;
     }
     return res;
   }
@@ -66,7 +66,7 @@ export class ProjectService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((project: IProject) => {
-        project.target = project.target != null ? moment(project.target) : null;
+        project.estimatedEndDate = project.estimatedEndDate != null ? moment(project.estimatedEndDate) : null;
       });
     }
     return res;

@@ -3,7 +3,6 @@ package com.lenovo.coe.web.rest
 import com.lenovo.coe.PmAppApp
 import com.lenovo.coe.domain.Status
 import com.lenovo.coe.repository.StatusRepository
-import com.lenovo.coe.service.StatusService
 import com.lenovo.coe.web.rest.errors.ExceptionTranslator
 
 import kotlin.test.assertNotNull
@@ -44,9 +43,6 @@ class StatusResourceIT {
     private lateinit var statusRepository: StatusRepository
 
     @Autowired
-    private lateinit var statusService: StatusService
-
-    @Autowired
     private lateinit var jacksonMessageConverter: MappingJackson2HttpMessageConverter
 
     @Autowired
@@ -65,7 +61,7 @@ class StatusResourceIT {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        val statusResource = StatusResource(statusService)
+        val statusResource = StatusResource(statusRepository)
         this.restStatusMockMvc = MockMvcBuilders.standaloneSetup(statusResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -175,7 +171,7 @@ class StatusResourceIT {
     @Test
     fun updateStatus() {
         // Initialize the database
-        statusService.save(status)
+        statusRepository.save(status)
 
         val databaseSizeBeforeUpdate = statusRepository.findAll().size
 
@@ -219,7 +215,7 @@ class StatusResourceIT {
     @Test
     fun deleteStatus() {
         // Initialize the database
-        statusService.save(status)
+        statusRepository.save(status)
 
         val databaseSizeBeforeDelete = statusRepository.findAll().size
 

@@ -1,7 +1,7 @@
 package com.lenovo.coe.web.rest
 
 import com.lenovo.coe.domain.Comment
-import com.lenovo.coe.service.CommentService
+import com.lenovo.coe.repository.CommentRepository
 import com.lenovo.coe.web.rest.errors.BadRequestAlertException
 
 import io.github.jhipster.web.util.HeaderUtil
@@ -29,7 +29,7 @@ import java.net.URISyntaxException
 @RestController
 @RequestMapping("/api")
 class CommentResource(
-    private val commentService: CommentService
+    private val commentRepository: CommentRepository
 ) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -50,7 +50,7 @@ class CommentResource(
         if (comment.id != null) {
             throw BadRequestAlertException("A new comment cannot already have an ID", ENTITY_NAME, "idexists")
         }
-        val result = commentService.save(comment)
+        val result = commentRepository.save(comment)
         return ResponseEntity.created(URI("/api/comments/" + result.id))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.id.toString()))
             .body(result)
@@ -71,7 +71,7 @@ class CommentResource(
         if (comment.id == null) {
             throw BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull")
         }
-        val result = commentService.save(comment)
+        val result = commentRepository.save(comment)
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, comment.id.toString()))
             .body(result)
@@ -80,12 +80,13 @@ class CommentResource(
     /**
      * `GET  /comments` : get all the comments.
      *
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the [ResponseEntity] with status `200 (OK)` and the list of comments in body.
      */
     @GetMapping("/comments")    
-    fun getAllComments(): MutableList<Comment> {
+    fun getAllComments(@RequestParam(required = false, defaultValue = "false") eagerload: Boolean): MutableList<Comment> {
         log.debug("REST request to get all Comments")
-        return commentService.findAll()
+        return commentRepository.findAllWithEagerRelationships()
     }
 
     /**
@@ -97,7 +98,7 @@ class CommentResource(
     @GetMapping("/comments/{id}")
     fun getComment(@PathVariable id: String): ResponseEntity<Comment> {
         log.debug("REST request to get Comment : {}", id)
-        val comment = commentService.findOne(id)
+        val comment = commentRepository.findOneWithEagerRelationships(id)
         return ResponseUtil.wrapOrNotFound(comment)
     }
 
@@ -110,7 +111,8 @@ class CommentResource(
     @DeleteMapping("/comments/{id}")
     fun deleteComment(@PathVariable id: String): ResponseEntity<Void> {
         log.debug("REST request to delete Comment : {}", id)
-        commentService.delete(id)
+
+        commentRepository.deleteById(id)
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build()
     }
 

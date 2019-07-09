@@ -1,7 +1,7 @@
 package com.lenovo.coe.web.rest
 
 import com.lenovo.coe.domain.Milestone
-import com.lenovo.coe.service.MilestoneService
+import com.lenovo.coe.repository.MilestoneRepository
 import com.lenovo.coe.web.rest.errors.BadRequestAlertException
 
 import io.github.jhipster.web.util.HeaderUtil
@@ -29,7 +29,7 @@ import java.net.URISyntaxException
 @RestController
 @RequestMapping("/api")
 class MilestoneResource(
-    private val milestoneService: MilestoneService
+    private val milestoneRepository: MilestoneRepository
 ) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -50,7 +50,7 @@ class MilestoneResource(
         if (milestone.id != null) {
             throw BadRequestAlertException("A new milestone cannot already have an ID", ENTITY_NAME, "idexists")
         }
-        val result = milestoneService.save(milestone)
+        val result = milestoneRepository.save(milestone)
         return ResponseEntity.created(URI("/api/milestones/" + result.id))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.id.toString()))
             .body(result)
@@ -71,7 +71,7 @@ class MilestoneResource(
         if (milestone.id == null) {
             throw BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull")
         }
-        val result = milestoneService.save(milestone)
+        val result = milestoneRepository.save(milestone)
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, milestone.id.toString()))
             .body(result)
@@ -86,7 +86,7 @@ class MilestoneResource(
     @GetMapping("/milestones")    
     fun getAllMilestones(@RequestParam(required = false, defaultValue = "false") eagerload: Boolean): MutableList<Milestone> {
         log.debug("REST request to get all Milestones")
-        return milestoneService.findAll()
+        return milestoneRepository.findAllWithEagerRelationships()
     }
 
     /**
@@ -98,7 +98,7 @@ class MilestoneResource(
     @GetMapping("/milestones/{id}")
     fun getMilestone(@PathVariable id: String): ResponseEntity<Milestone> {
         log.debug("REST request to get Milestone : {}", id)
-        val milestone = milestoneService.findOne(id)
+        val milestone = milestoneRepository.findOneWithEagerRelationships(id)
         return ResponseUtil.wrapOrNotFound(milestone)
     }
 
@@ -111,7 +111,8 @@ class MilestoneResource(
     @DeleteMapping("/milestones/{id}")
     fun deleteMilestone(@PathVariable id: String): ResponseEntity<Void> {
         log.debug("REST request to delete Milestone : {}", id)
-        milestoneService.delete(id)
+
+        milestoneRepository.deleteById(id)
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build()
     }
 

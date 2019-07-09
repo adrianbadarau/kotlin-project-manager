@@ -3,7 +3,6 @@ package com.lenovo.coe.web.rest
 import com.lenovo.coe.PmAppApp
 import com.lenovo.coe.domain.Task
 import com.lenovo.coe.repository.TaskRepository
-import com.lenovo.coe.service.TaskService
 import com.lenovo.coe.web.rest.errors.ExceptionTranslator
 
 import kotlin.test.assertNotNull
@@ -22,8 +21,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.validation.Validator
 
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.hasItem
@@ -55,12 +52,6 @@ class TaskResourceIT {
     @Mock
     private lateinit var taskRepositoryMock: TaskRepository
 
-    @Mock
-    private lateinit var taskServiceMock: TaskService
-
-    @Autowired
-    private lateinit var taskService: TaskService
-
     @Autowired
     private lateinit var jacksonMessageConverter: MappingJackson2HttpMessageConverter
 
@@ -80,7 +71,7 @@ class TaskResourceIT {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        val taskResource = TaskResource(taskService)
+        val taskResource = TaskResource(taskRepository)
         this.restTaskMockMvc = MockMvcBuilders.standaloneSetup(taskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -111,8 +102,9 @@ class TaskResourceIT {
         assertThat(taskList).hasSize(databaseSizeBeforeCreate + 1)
         val testTask = taskList[taskList.size - 1]
         assertThat(testTask.name).isEqualTo(DEFAULT_NAME)
-        assertThat(testTask.estimatedDate).isEqualTo(DEFAULT_ESTIMATED_DATE)
-        assertThat(testTask.details).isEqualTo(DEFAULT_DETAILS)
+        assertThat(testTask.description).isEqualTo(DEFAULT_DESCRIPTION)
+        assertThat(testTask.estimatedTime).isEqualTo(DEFAULT_ESTIMATED_TIME)
+        assertThat(testTask.spentTime).isEqualTo(DEFAULT_SPENT_TIME)
     }
 
     @Test
@@ -154,6 +146,24 @@ class TaskResourceIT {
     }
 
     @Test
+    fun checkDescriptionIsRequired() {
+        val databaseSizeBeforeTest = taskRepository.findAll().size
+        // set the field null
+        task.description = null
+
+        // Create the Task, which fails.
+
+        restTaskMockMvc.perform(
+            post("/api/tasks")
+                .contentType(APPLICATION_JSON_UTF8)
+                .content(convertObjectToJsonBytes(task))
+        ).andExpect(status().isBadRequest)
+
+        val taskList = taskRepository.findAll()
+        assertThat(taskList).hasSize(databaseSizeBeforeTest)
+    }
+
+    @Test
     fun getAllTasks() {
         // Initialize the database
         taskRepository.save(task)
@@ -164,14 +174,15 @@ class TaskResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(task.id)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].estimatedDate").value(hasItem(DEFAULT_ESTIMATED_DATE.toString())))
-            .andExpect(jsonPath("$.[*].details").value(hasItem(DEFAULT_DETAILS)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].estimatedTime").value(hasItem(DEFAULT_ESTIMATED_TIME.toDouble())))
+            .andExpect(jsonPath("$.[*].spentTime").value(hasItem(DEFAULT_SPENT_TIME.toDouble())))
     }
     
     @Suppress("unchecked")
     fun getAllTasksWithEagerRelationshipsIsEnabled() {
-        val taskResource = TaskResource(taskServiceMock)
-        `when`(taskServiceMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
+        val taskResource = TaskResource(taskRepositoryMock)
+        `when`(taskRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
 
         val restTaskMockMvc = MockMvcBuilders.standaloneSetup(taskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -182,13 +193,13 @@ class TaskResourceIT {
         restTaskMockMvc.perform(get("/api/tasks?eagerload=true"))
             .andExpect(status().isOk)
 
-        verify(taskServiceMock, times(1)).findAllWithEagerRelationships(any())
+        verify(taskRepositoryMock, times(1)).findAllWithEagerRelationships(any())
     }
 
     @Suppress("unchecked")
     fun getAllTasksWithEagerRelationshipsIsNotEnabled() {
-        val taskResource = TaskResource(taskServiceMock)
-            `when`(taskServiceMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
+        val taskResource = TaskResource(taskRepositoryMock)
+        `when`(taskRepositoryMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
         val restTaskMockMvc = MockMvcBuilders.standaloneSetup(taskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -198,7 +209,7 @@ class TaskResourceIT {
         restTaskMockMvc.perform(get("/api/tasks?eagerload=true"))
             .andExpect(status().isOk)
 
-        verify(taskServiceMock, times(1)).findAllWithEagerRelationships(any())
+        verify(taskRepositoryMock, times(1)).findAllWithEagerRelationships(any())
     }
 
     @Test
@@ -215,8 +226,9 @@ class TaskResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(id))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.estimatedDate").value(DEFAULT_ESTIMATED_DATE.toString()))
-            .andExpect(jsonPath("$.details").value(DEFAULT_DETAILS))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.estimatedTime").value(DEFAULT_ESTIMATED_TIME.toDouble()))
+            .andExpect(jsonPath("$.spentTime").value(DEFAULT_SPENT_TIME.toDouble()))
     }
 
     @Test
@@ -229,7 +241,7 @@ class TaskResourceIT {
     @Test
     fun updateTask() {
         // Initialize the database
-        taskService.save(task)
+        taskRepository.save(task)
 
         val databaseSizeBeforeUpdate = taskRepository.findAll().size
 
@@ -238,8 +250,9 @@ class TaskResourceIT {
         assertNotNull(id)
         val updatedTask = taskRepository.findById(id).get()
         updatedTask.name = UPDATED_NAME
-        updatedTask.estimatedDate = UPDATED_ESTIMATED_DATE
-        updatedTask.details = UPDATED_DETAILS
+        updatedTask.description = UPDATED_DESCRIPTION
+        updatedTask.estimatedTime = UPDATED_ESTIMATED_TIME
+        updatedTask.spentTime = UPDATED_SPENT_TIME
 
         restTaskMockMvc.perform(
             put("/api/tasks")
@@ -252,8 +265,9 @@ class TaskResourceIT {
         assertThat(taskList).hasSize(databaseSizeBeforeUpdate)
         val testTask = taskList[taskList.size - 1]
         assertThat(testTask.name).isEqualTo(UPDATED_NAME)
-        assertThat(testTask.estimatedDate).isEqualTo(UPDATED_ESTIMATED_DATE)
-        assertThat(testTask.details).isEqualTo(UPDATED_DETAILS)
+        assertThat(testTask.description).isEqualTo(UPDATED_DESCRIPTION)
+        assertThat(testTask.estimatedTime).isEqualTo(UPDATED_ESTIMATED_TIME)
+        assertThat(testTask.spentTime).isEqualTo(UPDATED_SPENT_TIME)
     }
 
     @Test
@@ -277,7 +291,7 @@ class TaskResourceIT {
     @Test
     fun deleteTask() {
         // Initialize the database
-        taskService.save(task)
+        taskRepository.save(task)
 
         val databaseSizeBeforeDelete = taskRepository.findAll().size
 
@@ -314,11 +328,14 @@ class TaskResourceIT {
         private const val DEFAULT_NAME: String = "AAAAAAAAAA"
         private const val UPDATED_NAME = "BBBBBBBBBB"
 
-        private val DEFAULT_ESTIMATED_DATE: Instant = Instant.ofEpochMilli(0L)
-        private val UPDATED_ESTIMATED_DATE: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS)
+        private const val DEFAULT_DESCRIPTION: String = "AAAAAAAAAA"
+        private const val UPDATED_DESCRIPTION = "BBBBBBBBBB"
 
-        private const val DEFAULT_DETAILS: String = "AAAAAAAAAA"
-        private const val UPDATED_DETAILS = "BBBBBBBBBB"
+        private const val DEFAULT_ESTIMATED_TIME: Float = 1F
+        private const val UPDATED_ESTIMATED_TIME: Float = 2F
+
+        private const val DEFAULT_SPENT_TIME: Float = 1F
+        private const val UPDATED_SPENT_TIME: Float = 2F
 
         /**
          * Create an entity for this test.
@@ -330,8 +347,9 @@ class TaskResourceIT {
         fun createEntity(): Task {
             val task = Task(
                 name = DEFAULT_NAME,
-                estimatedDate = DEFAULT_ESTIMATED_DATE,
-                details = DEFAULT_DETAILS
+                description = DEFAULT_DESCRIPTION,
+                estimatedTime = DEFAULT_ESTIMATED_TIME,
+                spentTime = DEFAULT_SPENT_TIME
             )
 
             return task
@@ -347,8 +365,9 @@ class TaskResourceIT {
         fun createUpdatedEntity(): Task {
             val task = Task(
                 name = UPDATED_NAME,
-                estimatedDate = UPDATED_ESTIMATED_DATE,
-                details = UPDATED_DETAILS
+                description = UPDATED_DESCRIPTION,
+                estimatedTime = UPDATED_ESTIMATED_TIME,
+                spentTime = UPDATED_SPENT_TIME
             )
 
             return task

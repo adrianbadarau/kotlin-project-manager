@@ -1,7 +1,7 @@
 package com.lenovo.coe.web.rest
 
 import com.lenovo.coe.domain.Team
-import com.lenovo.coe.service.TeamService
+import com.lenovo.coe.repository.TeamRepository
 import com.lenovo.coe.web.rest.errors.BadRequestAlertException
 
 import io.github.jhipster.web.util.HeaderUtil
@@ -29,7 +29,7 @@ import java.net.URISyntaxException
 @RestController
 @RequestMapping("/api")
 class TeamResource(
-    private val teamService: TeamService
+    private val teamRepository: TeamRepository
 ) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -50,7 +50,7 @@ class TeamResource(
         if (team.id != null) {
             throw BadRequestAlertException("A new team cannot already have an ID", ENTITY_NAME, "idexists")
         }
-        val result = teamService.save(team)
+        val result = teamRepository.save(team)
         return ResponseEntity.created(URI("/api/teams/" + result.id))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.id.toString()))
             .body(result)
@@ -71,7 +71,7 @@ class TeamResource(
         if (team.id == null) {
             throw BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull")
         }
-        val result = teamService.save(team)
+        val result = teamRepository.save(team)
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, team.id.toString()))
             .body(result)
@@ -86,7 +86,7 @@ class TeamResource(
     @GetMapping("/teams")    
     fun getAllTeams(@RequestParam(required = false, defaultValue = "false") eagerload: Boolean): MutableList<Team> {
         log.debug("REST request to get all Teams")
-        return teamService.findAll()
+        return teamRepository.findAllWithEagerRelationships()
     }
 
     /**
@@ -98,7 +98,7 @@ class TeamResource(
     @GetMapping("/teams/{id}")
     fun getTeam(@PathVariable id: String): ResponseEntity<Team> {
         log.debug("REST request to get Team : {}", id)
-        val team = teamService.findOne(id)
+        val team = teamRepository.findOneWithEagerRelationships(id)
         return ResponseUtil.wrapOrNotFound(team)
     }
 
@@ -111,7 +111,8 @@ class TeamResource(
     @DeleteMapping("/teams/{id}")
     fun deleteTeam(@PathVariable id: String): ResponseEntity<Void> {
         log.debug("REST request to delete Team : {}", id)
-        teamService.delete(id)
+
+        teamRepository.deleteById(id)
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build()
     }
 

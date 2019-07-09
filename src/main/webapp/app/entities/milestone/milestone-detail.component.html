@@ -9,37 +9,19 @@
                 <dd>
                     <span>{{milestone.name}}</span>
                 </dd>
-                <dt><span>Target</span></dt>
-                <dd>
-                    <span>{{milestone.target}}</span>
-                </dd>
-                <dt><span>Description</span></dt>
-                <dd>
-                    <span>{{milestone.description}}</span>
-                </dd>
-                <dt><span>Workstream</span></dt>
-                <dd>
-                    <span>{{milestone.workstream}}</span>
-                </dd>
-                <dt><span>Code</span></dt>
-                <dd>
-                    <span>{{milestone.code}}</span>
-                </dd>
-                <dt><span>Track</span></dt>
-                <dd>
-                    <span>{{milestone.track}}</span>
-                </dd>
                 <dt><span>Estimated End Date</span></dt>
                 <dd>
                     <span>{{milestone.estimatedEndDate}}</span>
                 </dd>
-                <dt><span>Actual End Date</span></dt>
+                <dt><span>End Date</span></dt>
                 <dd>
-                    <span>{{milestone.actualEndDate}}</span>
+                    <span>{{milestone.endDate}}</span>
                 </dd>
-                <dt><span>Result</span></dt>
+                <dt><span>Project</span></dt>
                 <dd>
-                    <span>{{milestone.result}}</span>
+                    <div *ngIf="milestone.project">
+                        <a [routerLink]="['/project', milestone.project?.id, 'view']">{{milestone.project?.id}}</a>
+                    </div>
                 </dd>
                 <dt><span>Status</span></dt>
                 <dd>
@@ -47,33 +29,17 @@
                         <a [routerLink]="['/status', milestone.status?.id, 'view']">{{milestone.status?.id}}</a>
                     </div>
                 </dd>
-                <dt><span>Owner</span></dt>
+                <dt><span>Team</span></dt>
                 <dd>
-                    {{milestone.owner?.id}}
-                </dd>
-                <dt><span>Project Update</span></dt>
-                <dd>
-                    <span *ngFor="let projectUpdate of milestone.projectUpdates; let last = last">
-                        <a [routerLink]="['/project-update', projectUpdate?.id, 'view' ]">{{projectUpdate.id}}</a>{{last ? '' : ', '}}
+                    <span *ngFor="let team of milestone.teams; let last = last">
+                        <a [routerLink]="['/team', team?.id, 'view' ]">{{team.id}}</a>{{last ? '' : ', '}}
                     </span>
                 </dd>
-                <dt><span>Performance</span></dt>
+                <dt><span>User</span></dt>
                 <dd>
-                    <span *ngFor="let performance of milestone.performances; let last = last">
-                        <a [routerLink]="['/performance', performance?.id, 'view' ]">{{performance.id}}</a>{{last ? '' : ', '}}
+                    <span *ngFor="let user of milestone.users; let last = last">
+                        {{user.id}}{{last ? '' : ', '}}
                     </span>
-                </dd>
-                <dt><span>Comment</span></dt>
-                <dd>
-                    <span *ngFor="let comment of milestone.comments; let last = last">
-                        <a [routerLink]="['/comment', comment?.id, 'view' ]">{{comment.id}}</a>{{last ? '' : ', '}}
-                    </span>
-                </dd>
-                <dt><span>Delivrable</span></dt>
-                <dd>
-                    <div *ngIf="milestone.delivrable">
-                        <a [routerLink]="['/delivrable', milestone.delivrable?.id, 'view']">{{milestone.delivrable?.id}}</a>
-                    </div>
                 </dd>
             </dl>
 

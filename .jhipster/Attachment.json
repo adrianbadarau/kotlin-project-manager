@@ -1,0 +1,47 @@
+{
+    "name": "Attachment",
+    "fields": [
+        {
+            "fieldName": "filename",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "project",
+            "otherEntityRelationshipName": "attachment",
+            "relationshipName": "project",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "task",
+            "otherEntityRelationshipName": "attachment",
+            "relationshipName": "task",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "milestone",
+            "otherEntityRelationshipName": "attachment",
+            "relationshipName": "milestone",
+            "otherEntityField": "id",
+            "ownerSide": true
+        }
+    ],
+    "changelogDate": "20190709150625",
+    "entityTableName": "attachment",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

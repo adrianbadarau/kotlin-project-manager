@@ -1,5 +1,6 @@
 package com.lenovo.coe.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Field
@@ -29,34 +30,16 @@ class Milestone(
     @Field("name")
     var name: String? = null,
 
-    @get: NotNull
-    @Field("target")
-    var target: Instant? = null,
-
-    @Field("description")
-    var description: String? = null,
-
-    @Field("workstream")
-    var workstream: String? = null,
-
-    @Field("code")
-    var code: String? = null,
-
-    @Field("track")
-    var track: String? = null,
-
     @Field("estimated_end_date")
     var estimatedEndDate: Instant? = null,
 
-    @Field("actual_end_date")
-    var actualEndDate: Instant? = null,
-
-    @Field("result")
-    var result: String? = null,
+    @Field("end_date")
+    var endDate: Instant? = null,
 
     @DBRef
-    @Field("task")
-    var tasks: MutableSet<Task> = mutableSetOf(),
+    @Field("project")
+    @JsonIgnoreProperties("milestones")
+    var project: Project? = null,
 
     @DBRef
     @Field("status")
@@ -64,29 +47,49 @@ class Milestone(
     var status: Status? = null,
 
     @DBRef
-    @Field("owner")
-    @JsonIgnoreProperties("milestones")
-    var owner: User? = null,
+    @Field("teams")
+    var teams: MutableSet<Team> = mutableSetOf(),
 
     @DBRef
-    @Field("projectUpdates")
-    var projectUpdates: MutableSet<ProjectUpdate> = mutableSetOf(),
+    @Field("users")
+    var users: MutableSet<User> = mutableSetOf(),
 
     @DBRef
-    @Field("performances")
-    var performances: MutableSet<Performance> = mutableSetOf(),
+    @Field("task")
+    var tasks: MutableSet<Task> = mutableSetOf(),
+
+    @DBRef
+    @Field("attachments")
+    @JsonIgnore
+    var attachments: MutableSet<Attachment> = mutableSetOf(),
 
     @DBRef
     @Field("comments")
-    var comments: MutableSet<Comment> = mutableSetOf(),
-
-    @DBRef
-    @Field("delivrable")
-    @JsonIgnoreProperties("milestones")
-    var delivrable: Delivrable? = null
+    @JsonIgnore
+    var comments: MutableSet<Comment> = mutableSetOf()
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
+
+    fun addTeam(team: Team): Milestone {
+        this.teams.add(team)
+        return this
+    }
+
+    fun removeTeam(team: Team): Milestone {
+        this.teams.remove(team)
+        return this
+    }
+
+    fun addUser(user: User): Milestone {
+        this.users.add(user)
+        return this
+    }
+
+    fun removeUser(user: User): Milestone {
+        this.users.remove(user)
+        return this
+    }
 
     fun addTask(task: Task): Milestone {
         this.tasks.add(task)
@@ -100,33 +103,27 @@ class Milestone(
         return this
     }
 
-    fun addProjectUpdate(projectUpdate: ProjectUpdate): Milestone {
-        this.projectUpdates.add(projectUpdate)
+    fun addAttachment(attachment: Attachment): Milestone {
+        this.attachments.add(attachment)
+        attachment.milestones.add(this)
         return this
     }
 
-    fun removeProjectUpdate(projectUpdate: ProjectUpdate): Milestone {
-        this.projectUpdates.remove(projectUpdate)
-        return this
-    }
-
-    fun addPerformance(performance: Performance): Milestone {
-        this.performances.add(performance)
-        return this
-    }
-
-    fun removePerformance(performance: Performance): Milestone {
-        this.performances.remove(performance)
+    fun removeAttachment(attachment: Attachment): Milestone {
+        this.attachments.remove(attachment)
+        attachment.milestones.remove(this)
         return this
     }
 
     fun addComment(comment: Comment): Milestone {
         this.comments.add(comment)
+        comment.milestones.add(this)
         return this
     }
 
     fun removeComment(comment: Comment): Milestone {
         this.comments.remove(comment)
+        comment.milestones.remove(this)
         return this
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
@@ -144,14 +141,8 @@ class Milestone(
     override fun toString() = "Milestone{" +
         "id=$id" +
         ", name='$name'" +
-        ", target='$target'" +
-        ", description='$description'" +
-        ", workstream='$workstream'" +
-        ", code='$code'" +
-        ", track='$track'" +
         ", estimatedEndDate='$estimatedEndDate'" +
-        ", actualEndDate='$actualEndDate'" +
-        ", result='$result'" +
+        ", endDate='$endDate'" +
         "}"
 
 

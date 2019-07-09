@@ -1,15 +1,15 @@
-import { ITask } from 'app/shared/model/task.model';
 import { IUser } from 'app/core/user/user.model';
-import { IProject } from 'app/shared/model/project.model';
+import { ITask } from 'app/shared/model/task.model';
+import { IMilestone } from 'app/shared/model/milestone.model';
 
 export interface ITeam {
   id?: string;
   name?: string;
-  tasks?: ITask[];
   users?: IUser[];
-  project?: IProject;
+  tasks?: ITask[];
+  milestones?: IMilestone[];
 }
 
 export class Team implements ITeam {
-  constructor(public id?: string, public name?: string, public tasks?: ITask[], public users?: IUser[], public project?: IProject) {}
+  constructor(public id?: string, public name?: string, public users?: IUser[], public tasks?: ITask[], public milestones?: IMilestone[]) {}
 }

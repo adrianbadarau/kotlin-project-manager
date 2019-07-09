@@ -9,72 +9,64 @@
             ]
         },
         {
-            "fieldName": "objective",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "minlength"
-            ],
-            "fieldValidateRulesMinlength": 10
-        },
-        {
-            "fieldName": "target",
-            "fieldType": "Instant",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
-            "fieldName": "budget",
-            "fieldType": "Double"
-        },
-        {
-            "fieldName": "risk",
+            "fieldName": "code",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
-            "fieldName": "benefitMesurement",
+            "fieldName": "description",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "estimatedEndDate",
+            "fieldType": "Instant"
         }
     ],
     "relationships": [
         {
-            "relationshipType": "one-to-one",
-            "otherEntityName": "businessCase",
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
             "otherEntityRelationshipName": "project",
-            "relationshipName": "businessCase",
-            "otherEntityField": "id",
-            "ownerSide": true
+            "relationshipName": "owner",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "status",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "status",
+            "otherEntityField": "id"
         },
         {
             "relationshipType": "one-to-many",
-            "otherEntityName": "team",
+            "otherEntityName": "milestone",
             "otherEntityRelationshipName": "project",
-            "relationshipName": "team"
-        },
-        {
-            "relationshipType": "one-to-many",
-            "otherEntityName": "delivrable",
-            "otherEntityRelationshipName": "project",
-            "relationshipName": "delivrable"
+            "relationshipName": "milestone"
         },
         {
             "relationshipType": "many-to-many",
-            "otherEntityName": "performance",
+            "otherEntityName": "attachment",
             "otherEntityRelationshipName": "project",
-            "relationshipName": "performance",
+            "relationshipName": "attachment",
             "otherEntityField": "id",
-            "ownerSide": true
+            "ownerSide": false
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "comment",
+            "otherEntityRelationshipName": "project",
+            "relationshipName": "comment",
+            "otherEntityField": "id",
+            "ownerSide": false
         }
     ],
-    "changelogDate": "20190708122458",
+    "changelogDate": "20190709150620",
     "entityTableName": "project",
     "dto": "no",
     "pagination": "no",
-    "service": "serviceClass",
+    "service": "no",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "clientRootFolder": "",

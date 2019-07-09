@@ -1,7 +1,6 @@
 package com.lenovo.coe.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.data.mongodb.core.mapping.Document
@@ -29,24 +28,21 @@ class Team(
     @Field("name")
     var name: String? = null,
 
-
     @DBRef
     @Field("users")
     var users: MutableSet<User> = mutableSetOf(),
 
     @DBRef
-    @Field("project")
-    @JsonIgnoreProperties("teams")
-    var project: Project? = null,
+    @Field("tasks")
+    var tasks: MutableSet<Task> = mutableSetOf(),
 
     @DBRef
-    @Field("tasks")
+    @Field("milestones")
     @JsonIgnore
-    var tasks: MutableSet<Task> = mutableSetOf()
+    var milestones: MutableSet<Milestone> = mutableSetOf()
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
-
 
     fun addUser(user: User): Team {
         this.users.add(user)
@@ -60,13 +56,23 @@ class Team(
 
     fun addTask(task: Task): Team {
         this.tasks.add(task)
-        task.teams.add(this)
         return this
     }
 
     fun removeTask(task: Task): Team {
         this.tasks.remove(task)
-        task.teams.remove(this)
+        return this
+    }
+
+    fun addMilestone(milestone: Milestone): Team {
+        this.milestones.add(milestone)
+        milestone.teams.add(this)
+        return this
+    }
+
+    fun removeMilestone(milestone: Milestone): Team {
+        this.milestones.remove(milestone)
+        milestone.teams.remove(this)
         return this
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove

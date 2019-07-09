@@ -1,0 +1,35 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="changeHistory">
+            <h2><span>Change History</span> {{changeHistory.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Subject</span></dt>
+                <dd>
+                    <span>{{changeHistory.subject}}</span>
+                </dd>
+                <dt><span>From Value</span></dt>
+                <dd>
+                    <span>{{changeHistory.fromValue}}</span>
+                </dd>
+                <dt><span>To Value</span></dt>
+                <dd>
+                    <span>{{changeHistory.toValue}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/change-history', changeHistory.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

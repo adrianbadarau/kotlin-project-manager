@@ -1,20 +1,21 @@
-import { ITask } from 'app/shared/model/task.model';
+import { IProject } from 'app/shared/model/project.model';
 import { IMilestone } from 'app/shared/model/milestone.model';
+import { ITask } from 'app/shared/model/task.model';
 
 export interface IComment {
   id?: string;
   body?: string;
-  createdAt?: number;
-  tasks?: ITask[];
+  projects?: IProject[];
   milestones?: IMilestone[];
+  tasks?: ITask[];
 }
 
 export class Comment implements IComment {
   constructor(
     public id?: string,
     public body?: string,
-    public createdAt?: number,
-    public tasks?: ITask[],
-    public milestones?: IMilestone[]
+    public projects?: IProject[],
+    public milestones?: IMilestone[],
+    public tasks?: ITask[]
   ) {}
 }

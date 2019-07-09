@@ -19,7 +19,9 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Body</span></th>
-            <th><span>Created At</span></th>
+            <th><span>Project</span></th>
+            <th><span>Milestone</span></th>
+            <th><span>Task</span></th>
             <th></th>
             </tr>
             </thead>
@@ -27,7 +29,21 @@
             <tr *ngFor="let comment of comments ;trackBy: trackId">
                 <td><a [routerLink]="['/comment', comment.id, 'view' ]">{{comment.id}}</a></td>
                 <td>{{comment.body}}</td>
-                <td>{{comment.createdAt}}</td>
+                <td>
+                    <span *ngFor="let project of comment.projects; let last = last">
+                            <a class="form-control-static" [routerLink]="['../project', project?.id, 'view' ]">{{project.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td>
+                    <span *ngFor="let milestone of comment.milestones; let last = last">
+                            <a class="form-control-static" [routerLink]="['../milestone', milestone?.id, 'view' ]">{{milestone.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td>
+                    <span *ngFor="let task of comment.tasks; let last = last">
+                            <a class="form-control-static" [routerLink]="['../task', task?.id, 'view' ]">{{task.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"

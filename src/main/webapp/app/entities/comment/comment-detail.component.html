@@ -9,9 +9,23 @@
                 <dd>
                     <span>{{comment.body}}</span>
                 </dd>
-                <dt><span>Created At</span></dt>
+                <dt><span>Project</span></dt>
                 <dd>
-                    <span>{{comment.createdAt}}</span>
+                    <span *ngFor="let project of comment.projects; let last = last">
+                        <a [routerLink]="['/project', project?.id, 'view' ]">{{project.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Milestone</span></dt>
+                <dd>
+                    <span *ngFor="let milestone of comment.milestones; let last = last">
+                        <a [routerLink]="['/milestone', milestone?.id, 'view' ]">{{milestone.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Task</span></dt>
+                <dd>
+                    <span *ngFor="let task of comment.tasks; let last = last">
+                        <a [routerLink]="['/task', task?.id, 'view' ]">{{task.id}}</a>{{last ? '' : ', '}}
+                    </span>
                 </dd>
             </dl>
 

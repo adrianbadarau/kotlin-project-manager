@@ -12,6 +12,12 @@
     "relationships": [
         {
             "relationshipType": "one-to-many",
+            "otherEntityName": "project",
+            "otherEntityRelationshipName": "status",
+            "relationshipName": "project"
+        },
+        {
+            "relationshipType": "one-to-many",
             "otherEntityName": "milestone",
             "otherEntityRelationshipName": "status",
             "relationshipName": "milestone"
@@ -23,11 +29,11 @@
             "relationshipName": "task"
         }
     ],
-    "changelogDate": "20190708122504",
+    "changelogDate": "20190709150624",
     "entityTableName": "status",
     "dto": "no",
     "pagination": "no",
-    "service": "serviceClass",
+    "service": "no",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "clientRootFolder": "",

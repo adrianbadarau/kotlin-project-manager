@@ -23,7 +23,7 @@ describe('Service Tests', () => {
       service = injector.get(CommentService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Comment('ID', 'AAAAAAA', 0);
+      elemDefault = new Comment('ID', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -59,8 +59,7 @@ describe('Service Tests', () => {
       it('should update a Comment', async () => {
         const returnedFromService = Object.assign(
           {
-            body: 'BBBBBB',
-            createdAt: 1
+            body: 'BBBBBB'
           },
           elemDefault
         );
@@ -78,8 +77,7 @@ describe('Service Tests', () => {
       it('should return a list of Comment', async () => {
         const returnedFromService = Object.assign(
           {
-            body: 'BBBBBB',
-            createdAt: 1
+            body: 'BBBBBB'
           },
           elemDefault
         );

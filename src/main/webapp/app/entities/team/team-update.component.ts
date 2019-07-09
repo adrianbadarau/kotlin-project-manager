@@ -7,11 +7,11 @@ import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
 import { ITeam, Team } from 'app/shared/model/team.model';
 import { TeamService } from './team.service';
+import { IUser, UserService } from 'app/core';
 import { ITask } from 'app/shared/model/task.model';
 import { TaskService } from 'app/entities/task';
-import { IUser, UserService } from 'app/core';
-import { IProject } from 'app/shared/model/project.model';
-import { ProjectService } from 'app/entities/project';
+import { IMilestone } from 'app/shared/model/milestone.model';
+import { MilestoneService } from 'app/entities/milestone';
 
 @Component({
   selector: 'jhi-team-update',
@@ -22,23 +22,23 @@ export class TeamUpdateComponent implements OnInit {
 
   users: IUser[];
 
-  projects: IProject[];
-
   tasks: ITask[];
+
+  milestones: IMilestone[];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
     users: [],
-    project: []
+    tasks: []
   });
 
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected teamService: TeamService,
-    protected taskService: TaskService,
     protected userService: UserService,
-    protected projectService: ProjectService,
+    protected taskService: TaskService,
+    protected milestoneService: MilestoneService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -55,13 +55,6 @@ export class TeamUpdateComponent implements OnInit {
         map((response: HttpResponse<IUser[]>) => response.body)
       )
       .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.projectService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IProject[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IProject[]>) => response.body)
-      )
-      .subscribe((res: IProject[]) => (this.projects = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.taskService
       .query()
       .pipe(
@@ -69,6 +62,13 @@ export class TeamUpdateComponent implements OnInit {
         map((response: HttpResponse<ITask[]>) => response.body)
       )
       .subscribe((res: ITask[]) => (this.tasks = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.milestoneService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IMilestone[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IMilestone[]>) => response.body)
+      )
+      .subscribe((res: IMilestone[]) => (this.milestones = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(team: ITeam) {
@@ -76,7 +76,7 @@ export class TeamUpdateComponent implements OnInit {
       id: team.id,
       name: team.name,
       users: team.users,
-      project: team.project
+      tasks: team.tasks
     });
   }
 
@@ -100,7 +100,7 @@ export class TeamUpdateComponent implements OnInit {
       id: this.editForm.get(['id']).value,
       name: this.editForm.get(['name']).value,
       users: this.editForm.get(['users']).value,
-      project: this.editForm.get(['project']).value
+      tasks: this.editForm.get(['tasks']).value
     };
   }
 
@@ -124,11 +124,11 @@ export class TeamUpdateComponent implements OnInit {
     return item.id;
   }
 
-  trackProjectById(index: number, item: IProject) {
+  trackTaskById(index: number, item: ITask) {
     return item.id;
   }
 
-  trackTaskById(index: number, item: ITask) {
+  trackMilestoneById(index: number, item: IMilestone) {
     return item.id;
   }
 

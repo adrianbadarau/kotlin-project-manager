@@ -27,14 +27,14 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Project('ID', 'AAAAAAA', 'AAAAAAA', currentDate, 0, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Project('ID', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate);
     });
 
     describe('Service methods', () => {
       it('should find an element', async () => {
         const returnedFromService = Object.assign(
           {
-            target: currentDate.format(DATE_TIME_FORMAT)
+            estimatedEndDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
@@ -52,13 +52,13 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 'ID',
-            target: currentDate.format(DATE_TIME_FORMAT)
+            estimatedEndDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
-            target: currentDate
+            estimatedEndDate: currentDate
           },
           returnedFromService
         );
@@ -75,18 +75,16 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            objective: 'BBBBBB',
-            target: currentDate.format(DATE_TIME_FORMAT),
-            budget: 1,
-            risk: 'BBBBBB',
-            benefitMesurement: 'BBBBBB'
+            code: 'BBBBBB',
+            description: 'BBBBBB',
+            estimatedEndDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
 
         const expected = Object.assign(
           {
-            target: currentDate
+            estimatedEndDate: currentDate
           },
           returnedFromService
         );
@@ -103,17 +101,15 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            objective: 'BBBBBB',
-            target: currentDate.format(DATE_TIME_FORMAT),
-            budget: 1,
-            risk: 'BBBBBB',
-            benefitMesurement: 'BBBBBB'
+            code: 'BBBBBB',
+            description: 'BBBBBB',
+            estimatedEndDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
-            target: currentDate
+            estimatedEndDate: currentDate
           },
           returnedFromService
         );

@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="attachment">
+            <h2><span>Attachment</span> {{attachment.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Filename</span></dt>
+                <dd>
+                    <span>{{attachment.filename}}</span>
+                </dd>
+                <dt><span>Project</span></dt>
+                <dd>
+                    <span *ngFor="let project of attachment.projects; let last = last">
+                        <a [routerLink]="['/project', project?.id, 'view' ]">{{project.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Task</span></dt>
+                <dd>
+                    <span *ngFor="let task of attachment.tasks; let last = last">
+                        <a [routerLink]="['/task', task?.id, 'view' ]">{{task.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+                <dt><span>Milestone</span></dt>
+                <dd>
+                    <span *ngFor="let milestone of attachment.milestones; let last = last">
+                        <a [routerLink]="['/milestone', milestone?.id, 'view' ]">{{milestone.id}}</a>{{last ? '' : ', '}}
+                    </span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/attachment', attachment.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

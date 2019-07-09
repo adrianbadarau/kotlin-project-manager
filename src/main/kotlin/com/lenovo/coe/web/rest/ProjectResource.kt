@@ -1,7 +1,7 @@
 package com.lenovo.coe.web.rest
 
 import com.lenovo.coe.domain.Project
-import com.lenovo.coe.service.ProjectService
+import com.lenovo.coe.repository.ProjectRepository
 import com.lenovo.coe.web.rest.errors.BadRequestAlertException
 
 import io.github.jhipster.web.util.HeaderUtil
@@ -29,7 +29,7 @@ import java.net.URISyntaxException
 @RestController
 @RequestMapping("/api")
 class ProjectResource(
-    private val projectService: ProjectService
+    private val projectRepository: ProjectRepository
 ) {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -50,7 +50,7 @@ class ProjectResource(
         if (project.id != null) {
             throw BadRequestAlertException("A new project cannot already have an ID", ENTITY_NAME, "idexists")
         }
-        val result = projectService.save(project)
+        val result = projectRepository.save(project)
         return ResponseEntity.created(URI("/api/projects/" + result.id))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.id.toString()))
             .body(result)
@@ -71,7 +71,7 @@ class ProjectResource(
         if (project.id == null) {
             throw BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull")
         }
-        val result = projectService.save(project)
+        val result = projectRepository.save(project)
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, project.id.toString()))
             .body(result)
@@ -80,13 +80,12 @@ class ProjectResource(
     /**
      * `GET  /projects` : get all the projects.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the [ResponseEntity] with status `200 (OK)` and the list of projects in body.
      */
     @GetMapping("/projects")    
-    fun getAllProjects(@RequestParam(required = false, defaultValue = "false") eagerload: Boolean): MutableList<Project> {
+    fun getAllProjects(): MutableList<Project> {
         log.debug("REST request to get all Projects")
-        return projectService.findAll()
+        return projectRepository.findAll()
     }
 
     /**
@@ -98,7 +97,7 @@ class ProjectResource(
     @GetMapping("/projects/{id}")
     fun getProject(@PathVariable id: String): ResponseEntity<Project> {
         log.debug("REST request to get Project : {}", id)
-        val project = projectService.findOne(id)
+        val project = projectRepository.findById(id)
         return ResponseUtil.wrapOrNotFound(project)
     }
 
@@ -111,7 +110,8 @@ class ProjectResource(
     @DeleteMapping("/projects/{id}")
     fun deleteProject(@PathVariable id: String): ResponseEntity<Void> {
         log.debug("REST request to delete Project : {}", id)
-        projectService.delete(id)
+
+        projectRepository.deleteById(id)
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build()
     }
 

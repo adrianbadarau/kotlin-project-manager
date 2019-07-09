@@ -11,12 +11,6 @@
     ],
     "relationships": [
         {
-            "relationshipType": "one-to-many",
-            "otherEntityName": "task",
-            "otherEntityRelationshipName": "assignedTeam",
-            "relationshipName": "task"
-        },
-        {
             "relationshipType": "many-to-many",
             "otherEntityName": "user",
             "otherEntityRelationshipName": "team",
@@ -25,26 +19,27 @@
             "ownerSide": true
         },
         {
-            "relationshipType": "many-to-one",
-            "otherEntityName": "project",
-            "otherEntityRelationshipName": "team",
-            "relationshipName": "project",
-            "otherEntityField": "id"
-        },
-        {
             "relationshipType": "many-to-many",
             "otherEntityName": "task",
             "otherEntityRelationshipName": "team",
             "relationshipName": "task",
             "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "milestone",
+            "otherEntityRelationshipName": "team",
+            "relationshipName": "milestone",
+            "otherEntityField": "id",
             "ownerSide": false
         }
     ],
-    "changelogDate": "20190708122508",
+    "changelogDate": "20190709150623",
     "entityTableName": "team",
     "dto": "no",
     "pagination": "no",
-    "service": "serviceClass",
+    "service": "no",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "clientRootFolder": "",

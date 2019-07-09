@@ -7,23 +7,16 @@
             "fieldValidateRules": [
                 "required"
             ]
-        },
-        {
-            "fieldName": "createdAt",
-            "fieldType": "Integer",
-            "fieldValidateRules": [
-                "required"
-            ]
         }
     ],
     "relationships": [
         {
             "relationshipType": "many-to-many",
-            "otherEntityName": "task",
+            "otherEntityName": "project",
             "otherEntityRelationshipName": "comment",
-            "relationshipName": "task",
+            "relationshipName": "project",
             "otherEntityField": "id",
-            "ownerSide": false
+            "ownerSide": true
         },
         {
             "relationshipType": "many-to-many",
@@ -31,14 +24,22 @@
             "otherEntityRelationshipName": "comment",
             "relationshipName": "milestone",
             "otherEntityField": "id",
-            "ownerSide": false
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "otherEntityName": "task",
+            "otherEntityRelationshipName": "comment",
+            "relationshipName": "task",
+            "otherEntityField": "id",
+            "ownerSide": true
         }
     ],
-    "changelogDate": "20190708122509",
+    "changelogDate": "20190709150626",
     "entityTableName": "comment",
     "dto": "no",
     "pagination": "no",
-    "service": "serviceClass",
+    "service": "no",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "clientRootFolder": "",

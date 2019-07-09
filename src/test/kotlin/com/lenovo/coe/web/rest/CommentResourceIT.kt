@@ -3,16 +3,17 @@ package com.lenovo.coe.web.rest
 import com.lenovo.coe.PmAppApp
 import com.lenovo.coe.domain.Comment
 import com.lenovo.coe.repository.CommentRepository
-import com.lenovo.coe.service.CommentService
 import com.lenovo.coe.web.rest.errors.ExceptionTranslator
 
 import kotlin.test.assertNotNull
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.MediaType
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -23,6 +24,11 @@ import org.springframework.validation.Validator
 
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.hasItem
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.reset
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -43,8 +49,8 @@ class CommentResourceIT {
     @Autowired
     private lateinit var commentRepository: CommentRepository
 
-    @Autowired
-    private lateinit var commentService: CommentService
+    @Mock
+    private lateinit var commentRepositoryMock: CommentRepository
 
     @Autowired
     private lateinit var jacksonMessageConverter: MappingJackson2HttpMessageConverter
@@ -65,7 +71,7 @@ class CommentResourceIT {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        val commentResource = CommentResource(commentService)
+        val commentResource = CommentResource(commentRepository)
         this.restCommentMockMvc = MockMvcBuilders.standaloneSetup(commentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -96,7 +102,6 @@ class CommentResourceIT {
         assertThat(commentList).hasSize(databaseSizeBeforeCreate + 1)
         val testComment = commentList[commentList.size - 1]
         assertThat(testComment.body).isEqualTo(DEFAULT_BODY)
-        assertThat(testComment.createdAt).isEqualTo(DEFAULT_CREATED_AT)
     }
 
     @Test
@@ -138,24 +143,6 @@ class CommentResourceIT {
     }
 
     @Test
-    fun checkCreatedAtIsRequired() {
-        val databaseSizeBeforeTest = commentRepository.findAll().size
-        // set the field null
-        comment.createdAt = null
-
-        // Create the Comment, which fails.
-
-        restCommentMockMvc.perform(
-            post("/api/comments")
-                .contentType(APPLICATION_JSON_UTF8)
-                .content(convertObjectToJsonBytes(comment))
-        ).andExpect(status().isBadRequest)
-
-        val commentList = commentRepository.findAll()
-        assertThat(commentList).hasSize(databaseSizeBeforeTest)
-    }
-
-    @Test
     fun getAllComments() {
         // Initialize the database
         commentRepository.save(comment)
@@ -166,9 +153,41 @@ class CommentResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(comment.id)))
             .andExpect(jsonPath("$.[*].body").value(hasItem(DEFAULT_BODY)))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT)))
     }
     
+    @Suppress("unchecked")
+    fun getAllCommentsWithEagerRelationshipsIsEnabled() {
+        val commentResource = CommentResource(commentRepositoryMock)
+        `when`(commentRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
+
+        val restCommentMockMvc = MockMvcBuilders.standaloneSetup(commentResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build()
+
+        restCommentMockMvc.perform(get("/api/comments?eagerload=true"))
+            .andExpect(status().isOk)
+
+        verify(commentRepositoryMock, times(1)).findAllWithEagerRelationships(any())
+    }
+
+    @Suppress("unchecked")
+    fun getAllCommentsWithEagerRelationshipsIsNotEnabled() {
+        val commentResource = CommentResource(commentRepositoryMock)
+        `when`(commentRepositoryMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
+        val restCommentMockMvc = MockMvcBuilders.standaloneSetup(commentResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build()
+
+        restCommentMockMvc.perform(get("/api/comments?eagerload=true"))
+            .andExpect(status().isOk)
+
+        verify(commentRepositoryMock, times(1)).findAllWithEagerRelationships(any())
+    }
+
     @Test
     fun getComment() {
         // Initialize the database
@@ -183,7 +202,6 @@ class CommentResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(id))
             .andExpect(jsonPath("$.body").value(DEFAULT_BODY))
-            .andExpect(jsonPath("$.createdAt").value(DEFAULT_CREATED_AT))
     }
 
     @Test
@@ -196,7 +214,7 @@ class CommentResourceIT {
     @Test
     fun updateComment() {
         // Initialize the database
-        commentService.save(comment)
+        commentRepository.save(comment)
 
         val databaseSizeBeforeUpdate = commentRepository.findAll().size
 
@@ -205,7 +223,6 @@ class CommentResourceIT {
         assertNotNull(id)
         val updatedComment = commentRepository.findById(id).get()
         updatedComment.body = UPDATED_BODY
-        updatedComment.createdAt = UPDATED_CREATED_AT
 
         restCommentMockMvc.perform(
             put("/api/comments")
@@ -218,7 +235,6 @@ class CommentResourceIT {
         assertThat(commentList).hasSize(databaseSizeBeforeUpdate)
         val testComment = commentList[commentList.size - 1]
         assertThat(testComment.body).isEqualTo(UPDATED_BODY)
-        assertThat(testComment.createdAt).isEqualTo(UPDATED_CREATED_AT)
     }
 
     @Test
@@ -242,7 +258,7 @@ class CommentResourceIT {
     @Test
     fun deleteComment() {
         // Initialize the database
-        commentService.save(comment)
+        commentRepository.save(comment)
 
         val databaseSizeBeforeDelete = commentRepository.findAll().size
 
@@ -279,9 +295,6 @@ class CommentResourceIT {
         private const val DEFAULT_BODY: String = "AAAAAAAAAA"
         private const val UPDATED_BODY = "BBBBBBBBBB"
 
-        private const val DEFAULT_CREATED_AT: Int = 1
-        private const val UPDATED_CREATED_AT: Int = 2
-
         /**
          * Create an entity for this test.
          *
@@ -291,8 +304,7 @@ class CommentResourceIT {
         @JvmStatic
         fun createEntity(): Comment {
             val comment = Comment(
-                body = DEFAULT_BODY,
-                createdAt = DEFAULT_CREATED_AT
+                body = DEFAULT_BODY
             )
 
             return comment
@@ -307,8 +319,7 @@ class CommentResourceIT {
         @JvmStatic
         fun createUpdatedEntity(): Comment {
             val comment = Comment(
-                body = UPDATED_BODY,
-                createdAt = UPDATED_CREATED_AT
+                body = UPDATED_BODY
             )
 
             return comment

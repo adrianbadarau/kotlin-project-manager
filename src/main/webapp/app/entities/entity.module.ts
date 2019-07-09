@@ -9,24 +9,8 @@ import { RouterModule } from '@angular/router';
         loadChildren: './project/project.module#PmAppProjectModule'
       },
       {
-        path: 'business-case',
-        loadChildren: './business-case/business-case.module#PmAppBusinessCaseModule'
-      },
-      {
-        path: 'benefit',
-        loadChildren: './benefit/benefit.module#PmAppBenefitModule'
-      },
-      {
-        path: 'benefit-type',
-        loadChildren: './benefit-type/benefit-type.module#PmAppBenefitTypeModule'
-      },
-      {
         path: 'milestone',
         loadChildren: './milestone/milestone.module#PmAppMilestoneModule'
-      },
-      {
-        path: 'delivrable',
-        loadChildren: './delivrable/delivrable.module#PmAppDelivrableModule'
       },
       {
         path: 'status',
@@ -37,20 +21,28 @@ import { RouterModule } from '@angular/router';
         loadChildren: './task/task.module#PmAppTaskModule'
       },
       {
-        path: 'project-update',
-        loadChildren: './project-update/project-update.module#PmAppProjectUpdateModule'
-      },
-      {
-        path: 'performance',
-        loadChildren: './performance/performance.module#PmAppPerformanceModule'
-      },
-      {
         path: 'team',
         loadChildren: './team/team.module#PmAppTeamModule'
       },
       {
         path: 'comment',
         loadChildren: './comment/comment.module#PmAppCommentModule'
+      },
+      {
+        path: 'attachment',
+        loadChildren: './attachment/attachment.module#PmAppAttachmentModule'
+      },
+      {
+        path: 'task-type',
+        loadChildren: './task-type/task-type.module#PmAppTaskTypeModule'
+      },
+      {
+        path: 'priority',
+        loadChildren: './priority/priority.module#PmAppPriorityModule'
+      },
+      {
+        path: 'change-history',
+        loadChildren: './change-history/change-history.module#PmAppChangeHistoryModule'
       }
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ])

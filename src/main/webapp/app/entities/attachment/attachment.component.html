@@ -1,0 +1,75 @@
+<div>
+    <h2 id="page-heading">
+        <span>Attachments</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-attachment" [routerLink]="['/attachment/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Attachment
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="attachments?.length === 0">
+        <span>No attachments found</span>
+    </div>
+    <div class="table-responsive" *ngIf="attachments?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Filename</span></th>
+            <th><span>Project</span></th>
+            <th><span>Task</span></th>
+            <th><span>Milestone</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let attachment of attachments ;trackBy: trackId">
+                <td><a [routerLink]="['/attachment', attachment.id, 'view' ]">{{attachment.id}}</a></td>
+                <td>{{attachment.filename}}</td>
+                <td>
+                    <span *ngFor="let project of attachment.projects; let last = last">
+                            <a class="form-control-static" [routerLink]="['../project', project?.id, 'view' ]">{{project.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td>
+                    <span *ngFor="let task of attachment.tasks; let last = last">
+                            <a class="form-control-static" [routerLink]="['../task', task?.id, 'view' ]">{{task.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td>
+                    <span *ngFor="let milestone of attachment.milestones; let last = last">
+                            <a class="form-control-static" [routerLink]="['../milestone', milestone?.id, 'view' ]">{{milestone.id}}</a>{{last ? '' : ', '}}
+                        </span>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/attachment', attachment.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/attachment', attachment.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'attachment', { outlets: { popup: attachment.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

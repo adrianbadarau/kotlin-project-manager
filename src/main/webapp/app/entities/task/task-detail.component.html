@@ -9,13 +9,23 @@
                 <dd>
                     <span>{{task.name}}</span>
                 </dd>
-                <dt><span>Estimated Date</span></dt>
+                <dt><span>Description</span></dt>
                 <dd>
-                    <span>{{task.estimatedDate}}</span>
+                    <span>{{task.description}}</span>
                 </dd>
-                <dt><span>Details</span></dt>
+                <dt><span>Estimated Time</span></dt>
                 <dd>
-                    <span>{{task.details}}</span>
+                    <span>{{task.estimatedTime}}</span>
+                </dd>
+                <dt><span>Spent Time</span></dt>
+                <dd>
+                    <span>{{task.spentTime}}</span>
+                </dd>
+                <dt><span>Milestone</span></dt>
+                <dd>
+                    <div *ngIf="task.milestone">
+                        <a [routerLink]="['/milestone', task.milestone?.id, 'view']">{{task.milestone?.id}}</a>
+                    </div>
                 </dd>
                 <dt><span>Status</span></dt>
                 <dd>
@@ -23,41 +33,33 @@
                         <a [routerLink]="['/status', task.status?.id, 'view']">{{task.status?.id}}</a>
                     </div>
                 </dd>
-                <dt><span>Project Update</span></dt>
+                <dt><span>Task Type</span></dt>
                 <dd>
-                    <span *ngFor="let projectUpdate of task.projectUpdates; let last = last">
-                        <a [routerLink]="['/project-update', projectUpdate?.id, 'view' ]">{{projectUpdate.id}}</a>{{last ? '' : ', '}}
-                    </span>
+                    <div *ngIf="task.taskType">
+                        <a [routerLink]="['/task-type', task.taskType?.id, 'view']">{{task.taskType?.id}}</a>
+                    </div>
                 </dd>
-                <dt><span>Comment</span></dt>
+                <dt><span>Priority</span></dt>
                 <dd>
-                    <span *ngFor="let comment of task.comments; let last = last">
-                        <a [routerLink]="['/comment', comment?.id, 'view' ]">{{comment.id}}</a>{{last ? '' : ', '}}
-                    </span>
+                    <div *ngIf="task.priority">
+                        <a [routerLink]="['/priority', task.priority?.id, 'view']">{{task.priority?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Assignee</span></dt>
+                <dd>
+                    {{task.assignee?.id}}
+                </dd>
+                <dt><span>Parent</span></dt>
+                <dd>
+                    <div *ngIf="task.parent">
+                        <a [routerLink]="['/task', task.parent?.id, 'view']">{{task.parent?.id}}</a>
+                    </div>
                 </dd>
                 <dt><span>User</span></dt>
                 <dd>
                     <span *ngFor="let user of task.users; let last = last">
                         {{user.id}}{{last ? '' : ', '}}
                     </span>
-                </dd>
-                <dt><span>Team</span></dt>
-                <dd>
-                    <span *ngFor="let team of task.teams; let last = last">
-                        <a [routerLink]="['/team', team?.id, 'view' ]">{{team.id}}</a>{{last ? '' : ', '}}
-                    </span>
-                </dd>
-                <dt><span>Assigned Team</span></dt>
-                <dd>
-                    <div *ngIf="task.assignedTeam">
-                        <a [routerLink]="['/team', task.assignedTeam?.id, 'view']">{{task.assignedTeam?.id}}</a>
-                    </div>
-                </dd>
-                <dt><span>Milestone</span></dt>
-                <dd>
-                    <div *ngIf="task.milestone">
-                        <a [routerLink]="['/milestone', task.milestone?.id, 'view']">{{task.milestone?.id}}</a>
-                    </div>
                 </dd>
             </dl>
 

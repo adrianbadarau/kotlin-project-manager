@@ -1,5 +1,7 @@
 package com.lenovo.coe.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.data.mongodb.core.mapping.Document
@@ -29,74 +31,75 @@ class Project(
     var name: String? = null,
 
     @get: NotNull
-    @get: Size(min = 10)
-    @Field("objective")
-    var objective: String? = null,
+    @Field("code")
+    var code: String? = null,
 
-    @get: NotNull
-    @Field("target")
-    var target: Instant? = null,
+    @Field("description")
+    var description: String? = null,
 
-    @Field("budget")
-    var budget: Double? = null,
-
-    @get: NotNull
-    @Field("risk")
-    var risk: String? = null,
-
-    @Field("benefit_mesurement")
-    var benefitMesurement: String? = null,
+    @Field("estimated_end_date")
+    var estimatedEndDate: Instant? = null,
 
     @DBRef
-    @Field("businessCase")
-    var businessCase: BusinessCase? = null,
+    @Field("owner")
+    @JsonIgnoreProperties("projects")
+    var owner: User? = null,
 
     @DBRef
-    @Field("team")
-    var teams: MutableSet<Team> = mutableSetOf(),
+    @Field("status")
+    @JsonIgnoreProperties("projects")
+    var status: Status? = null,
 
     @DBRef
-    @Field("delivrable")
-    var delivrables: MutableSet<Delivrable> = mutableSetOf(),
+    @Field("milestone")
+    var milestones: MutableSet<Milestone> = mutableSetOf(),
 
     @DBRef
-    @Field("performances")
-    var performances: MutableSet<Performance> = mutableSetOf()
+    @Field("attachments")
+    @JsonIgnore
+    var attachments: MutableSet<Attachment> = mutableSetOf(),
+
+    @DBRef
+    @Field("comments")
+    @JsonIgnore
+    var comments: MutableSet<Comment> = mutableSetOf()
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
 
-    fun addTeam(team: Team): Project {
-        this.teams.add(team)
-        team.project = this
+    fun addMilestone(milestone: Milestone): Project {
+        this.milestones.add(milestone)
+        milestone.project = this
         return this
     }
 
-    fun removeTeam(team: Team): Project {
-        this.teams.remove(team)
-        team.project = null
+    fun removeMilestone(milestone: Milestone): Project {
+        this.milestones.remove(milestone)
+        milestone.project = null
         return this
     }
 
-    fun addDelivrable(delivrable: Delivrable): Project {
-        this.delivrables.add(delivrable)
-        delivrable.project = this
+    fun addAttachment(attachment: Attachment): Project {
+        this.attachments.add(attachment)
+        attachment.projects.add(this)
         return this
     }
 
-    fun removeDelivrable(delivrable: Delivrable): Project {
-        this.delivrables.remove(delivrable)
-        delivrable.project = null
+    fun removeAttachment(attachment: Attachment): Project {
+        this.attachments.remove(attachment)
+        attachment.projects.remove(this)
         return this
     }
 
-    fun addPerformance(performance: Performance): Project {
-        this.performances.add(performance)
+    fun addComment(comment: Comment): Project {
+        this.comments.add(comment)
+        comment.projects.add(this)
         return this
     }
 
-    fun removePerformance(performance: Performance): Project {
-        this.performances.remove(performance)
+    fun removeComment(comment: Comment): Project {
+        this.comments.remove(comment)
+        comment.projects.remove(this)
         return this
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
@@ -114,11 +117,9 @@ class Project(
     override fun toString() = "Project{" +
         "id=$id" +
         ", name='$name'" +
-        ", objective='$objective'" +
-        ", target='$target'" +
-        ", budget=$budget" +
-        ", risk='$risk'" +
-        ", benefitMesurement='$benefitMesurement'" +
+        ", code='$code'" +
+        ", description='$description'" +
+        ", estimatedEndDate='$estimatedEndDate'" +
         "}"
 
 

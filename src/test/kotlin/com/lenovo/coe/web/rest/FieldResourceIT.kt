@@ -3,7 +3,6 @@ package com.lenovo.coe.web.rest
 import com.lenovo.coe.PmAppApp
 import com.lenovo.coe.domain.Field
 import com.lenovo.coe.repository.FieldRepository
-import com.lenovo.coe.service.FieldService
 import com.lenovo.coe.web.rest.errors.ExceptionTranslator
 
 import kotlin.test.assertNotNull
@@ -44,9 +43,6 @@ class FieldResourceIT {
     private lateinit var fieldRepository: FieldRepository
 
     @Autowired
-    private lateinit var fieldService: FieldService
-
-    @Autowired
     private lateinit var jacksonMessageConverter: MappingJackson2HttpMessageConverter
 
     @Autowired
@@ -65,7 +61,7 @@ class FieldResourceIT {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        val fieldResource = FieldResource(fieldService)
+        val fieldResource = FieldResource(fieldRepository)
         this.restFieldMockMvc = MockMvcBuilders.standaloneSetup(fieldResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -178,7 +174,7 @@ class FieldResourceIT {
     @Test
     fun updateField() {
         // Initialize the database
-        fieldService.save(field)
+        fieldRepository.save(field)
 
         val databaseSizeBeforeUpdate = fieldRepository.findAll().size
 
@@ -224,7 +220,7 @@ class FieldResourceIT {
     @Test
     fun deleteField() {
         // Initialize the database
-        fieldService.save(field)
+        fieldRepository.save(field)
 
         val databaseSizeBeforeDelete = fieldRepository.findAll().size
 

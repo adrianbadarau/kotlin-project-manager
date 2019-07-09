@@ -27,27 +27,15 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Milestone(
-        'ID',
-        'AAAAAAA',
-        currentDate,
-        'AAAAAAA',
-        'AAAAAAA',
-        'AAAAAAA',
-        'AAAAAAA',
-        currentDate,
-        currentDate,
-        'AAAAAAA'
-      );
+      elemDefault = new Milestone('ID', 'AAAAAAA', currentDate, currentDate);
     });
 
     describe('Service methods', () => {
       it('should find an element', async () => {
         const returnedFromService = Object.assign(
           {
-            target: currentDate.format(DATE_TIME_FORMAT),
             estimatedEndDate: currentDate.format(DATE_TIME_FORMAT),
-            actualEndDate: currentDate.format(DATE_TIME_FORMAT)
+            endDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
@@ -65,17 +53,15 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 'ID',
-            target: currentDate.format(DATE_TIME_FORMAT),
             estimatedEndDate: currentDate.format(DATE_TIME_FORMAT),
-            actualEndDate: currentDate.format(DATE_TIME_FORMAT)
+            endDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
-            target: currentDate,
             estimatedEndDate: currentDate,
-            actualEndDate: currentDate
+            endDate: currentDate
           },
           returnedFromService
         );
@@ -92,23 +78,16 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            target: currentDate.format(DATE_TIME_FORMAT),
-            description: 'BBBBBB',
-            workstream: 'BBBBBB',
-            code: 'BBBBBB',
-            track: 'BBBBBB',
             estimatedEndDate: currentDate.format(DATE_TIME_FORMAT),
-            actualEndDate: currentDate.format(DATE_TIME_FORMAT),
-            result: 'BBBBBB'
+            endDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
 
         const expected = Object.assign(
           {
-            target: currentDate,
             estimatedEndDate: currentDate,
-            actualEndDate: currentDate
+            endDate: currentDate
           },
           returnedFromService
         );
@@ -125,22 +104,15 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            target: currentDate.format(DATE_TIME_FORMAT),
-            description: 'BBBBBB',
-            workstream: 'BBBBBB',
-            code: 'BBBBBB',
-            track: 'BBBBBB',
             estimatedEndDate: currentDate.format(DATE_TIME_FORMAT),
-            actualEndDate: currentDate.format(DATE_TIME_FORMAT),
-            result: 'BBBBBB'
+            endDate: currentDate.format(DATE_TIME_FORMAT)
           },
           elemDefault
         );
         const expected = Object.assign(
           {
-            target: currentDate,
             estimatedEndDate: currentDate,
-            actualEndDate: currentDate
+            endDate: currentDate
           },
           returnedFromService
         );

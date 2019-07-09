@@ -15,11 +15,11 @@
                         {{user.id}}{{last ? '' : ', '}}
                     </span>
                 </dd>
-                <dt><span>Project</span></dt>
+                <dt><span>Task</span></dt>
                 <dd>
-                    <div *ngIf="team.project">
-                        <a [routerLink]="['/project', team.project?.id, 'view']">{{team.project?.id}}</a>
-                    </div>
+                    <span *ngFor="let task of team.tasks; let last = last">
+                        <a [routerLink]="['/task', task?.id, 'view' ]">{{task.id}}</a>{{last ? '' : ', '}}
+                    </span>
                 </dd>
             </dl>
 

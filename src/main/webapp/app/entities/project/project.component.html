@@ -19,13 +19,11 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Name</span></th>
-            <th><span>Objective</span></th>
-            <th><span>Target</span></th>
-            <th><span>Budget</span></th>
-            <th><span>Risk</span></th>
-            <th><span>Benefit Mesurement</span></th>
-            <th><span>Business Case</span></th>
-            <th><span>Performance</span></th>
+            <th><span>Code</span></th>
+            <th><span>Description</span></th>
+            <th><span>Estimated End Date</span></th>
+            <th><span>Owner</span></th>
+            <th><span>Status</span></th>
             <th></th>
             </tr>
             </thead>
@@ -33,20 +31,16 @@
             <tr *ngFor="let project of projects ;trackBy: trackId">
                 <td><a [routerLink]="['/project', project.id, 'view' ]">{{project.id}}</a></td>
                 <td>{{project.name}}</td>
-                <td>{{project.objective}}</td>
-                <td>{{project.target | date:'medium'}}</td>
-                <td>{{project.budget}}</td>
-                <td>{{project.risk}}</td>
-                <td>{{project.benefitMesurement}}</td>
+                <td>{{project.code}}</td>
+                <td>{{project.description}}</td>
+                <td>{{project.estimatedEndDate | date:'medium'}}</td>
                 <td>
-                    <div *ngIf="project.businessCase">
-                        <a [routerLink]="['../business-case', project.businessCase?.id, 'view' ]" >{{project.businessCase?.id}}</a>
-                    </div>
+                    {{project.owner?.id}}
                 </td>
                 <td>
-                    <span *ngFor="let performance of project.performances; let last = last">
-                            <a class="form-control-static" [routerLink]="['../performance', performance?.id, 'view' ]">{{performance.id}}</a>{{last ? '' : ', '}}
-                        </span>
+                    <div *ngIf="project.status">
+                        <a [routerLink]="['../status', project.status?.id, 'view' ]" >{{project.status?.id}}</a>
+                    </div>
                 </td>
                 <td class="text-right">
                     <div class="btn-group">

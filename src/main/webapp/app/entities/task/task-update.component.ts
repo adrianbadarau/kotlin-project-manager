@@ -4,22 +4,24 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import * as moment from 'moment';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 import { ITask, Task } from 'app/shared/model/task.model';
 import { TaskService } from './task.service';
-import { IStatus } from 'app/shared/model/status.model';
-import { StatusService } from 'app/entities/status';
-import { IProjectUpdate } from 'app/shared/model/project-update.model';
-import { ProjectUpdateService } from 'app/entities/project-update';
-import { IComment } from 'app/shared/model/comment.model';
-import { CommentService } from 'app/entities/comment';
-import { IUser, UserService } from 'app/core';
-import { ITeam } from 'app/shared/model/team.model';
-import { TeamService } from 'app/entities/team';
 import { IMilestone } from 'app/shared/model/milestone.model';
 import { MilestoneService } from 'app/entities/milestone';
+import { IStatus } from 'app/shared/model/status.model';
+import { StatusService } from 'app/entities/status';
+import { ITaskType } from 'app/shared/model/task-type.model';
+import { TaskTypeService } from 'app/entities/task-type';
+import { IPriority } from 'app/shared/model/priority.model';
+import { PriorityService } from 'app/entities/priority';
+import { IUser, UserService } from 'app/core';
+import { IAttachment } from 'app/shared/model/attachment.model';
+import { AttachmentService } from 'app/entities/attachment';
+import { IComment } from 'app/shared/model/comment.model';
+import { CommentService } from 'app/entities/comment';
+import { ITeam } from 'app/shared/model/team.model';
+import { TeamService } from 'app/entities/team';
 
 @Component({
   selector: 'jhi-task-update',
@@ -28,41 +30,50 @@ import { MilestoneService } from 'app/entities/milestone';
 export class TaskUpdateComponent implements OnInit {
   isSaving: boolean;
 
+  milestones: IMilestone[];
+
   statuses: IStatus[];
 
-  projectupdates: IProjectUpdate[];
+  tasktypes: ITaskType[];
 
-  comments: IComment[];
+  priorities: IPriority[];
 
   users: IUser[];
 
-  teams: ITeam[];
+  tasks: ITask[];
 
-  milestones: IMilestone[];
+  attachments: IAttachment[];
+
+  comments: IComment[];
+
+  teams: ITeam[];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
-    estimatedDate: [],
-    details: [],
+    description: [null, [Validators.required]],
+    estimatedTime: [],
+    spentTime: [],
+    milestone: [],
     status: [],
-    projectUpdates: [],
-    comments: [],
-    users: [],
-    teams: [],
-    assignedTeam: [],
-    milestone: []
+    taskType: [],
+    priority: [],
+    assignee: [],
+    parent: [],
+    users: []
   });
 
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected taskService: TaskService,
-    protected statusService: StatusService,
-    protected projectUpdateService: ProjectUpdateService,
-    protected commentService: CommentService,
-    protected userService: UserService,
-    protected teamService: TeamService,
     protected milestoneService: MilestoneService,
+    protected statusService: StatusService,
+    protected taskTypeService: TaskTypeService,
+    protected priorityService: PriorityService,
+    protected userService: UserService,
+    protected attachmentService: AttachmentService,
+    protected commentService: CommentService,
+    protected teamService: TeamService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -72,41 +83,6 @@ export class TaskUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ task }) => {
       this.updateForm(task);
     });
-    this.statusService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IStatus[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IStatus[]>) => response.body)
-      )
-      .subscribe((res: IStatus[]) => (this.statuses = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.projectUpdateService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IProjectUpdate[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IProjectUpdate[]>) => response.body)
-      )
-      .subscribe((res: IProjectUpdate[]) => (this.projectupdates = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.commentService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IComment[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IComment[]>) => response.body)
-      )
-      .subscribe((res: IComment[]) => (this.comments = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.userService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<IUser[]>) => mayBeOk.ok),
-        map((response: HttpResponse<IUser[]>) => response.body)
-      )
-      .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
-    this.teamService
-      .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<ITeam[]>) => mayBeOk.ok),
-        map((response: HttpResponse<ITeam[]>) => response.body)
-      )
-      .subscribe((res: ITeam[]) => (this.teams = res), (res: HttpErrorResponse) => this.onError(res.message));
     this.milestoneService
       .query()
       .pipe(
@@ -114,21 +90,78 @@ export class TaskUpdateComponent implements OnInit {
         map((response: HttpResponse<IMilestone[]>) => response.body)
       )
       .subscribe((res: IMilestone[]) => (this.milestones = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.statusService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IStatus[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IStatus[]>) => response.body)
+      )
+      .subscribe((res: IStatus[]) => (this.statuses = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.taskTypeService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<ITaskType[]>) => mayBeOk.ok),
+        map((response: HttpResponse<ITaskType[]>) => response.body)
+      )
+      .subscribe((res: ITaskType[]) => (this.tasktypes = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.priorityService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IPriority[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IPriority[]>) => response.body)
+      )
+      .subscribe((res: IPriority[]) => (this.priorities = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.userService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IUser[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IUser[]>) => response.body)
+      )
+      .subscribe((res: IUser[]) => (this.users = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.taskService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<ITask[]>) => mayBeOk.ok),
+        map((response: HttpResponse<ITask[]>) => response.body)
+      )
+      .subscribe((res: ITask[]) => (this.tasks = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.attachmentService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IAttachment[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IAttachment[]>) => response.body)
+      )
+      .subscribe((res: IAttachment[]) => (this.attachments = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.commentService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<IComment[]>) => mayBeOk.ok),
+        map((response: HttpResponse<IComment[]>) => response.body)
+      )
+      .subscribe((res: IComment[]) => (this.comments = res), (res: HttpErrorResponse) => this.onError(res.message));
+    this.teamService
+      .query()
+      .pipe(
+        filter((mayBeOk: HttpResponse<ITeam[]>) => mayBeOk.ok),
+        map((response: HttpResponse<ITeam[]>) => response.body)
+      )
+      .subscribe((res: ITeam[]) => (this.teams = res), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(task: ITask) {
     this.editForm.patchValue({
       id: task.id,
       name: task.name,
-      estimatedDate: task.estimatedDate != null ? task.estimatedDate.format(DATE_TIME_FORMAT) : null,
-      details: task.details,
+      description: task.description,
+      estimatedTime: task.estimatedTime,
+      spentTime: task.spentTime,
+      milestone: task.milestone,
       status: task.status,
-      projectUpdates: task.projectUpdates,
-      comments: task.comments,
-      users: task.users,
-      teams: task.teams,
-      assignedTeam: task.assignedTeam,
-      milestone: task.milestone
+      taskType: task.taskType,
+      priority: task.priority,
+      assignee: task.assignee,
+      parent: task.parent,
+      users: task.users
     });
   }
 
@@ -151,18 +184,16 @@ export class TaskUpdateComponent implements OnInit {
       ...new Task(),
       id: this.editForm.get(['id']).value,
       name: this.editForm.get(['name']).value,
-      estimatedDate:
-        this.editForm.get(['estimatedDate']).value != null
-          ? moment(this.editForm.get(['estimatedDate']).value, DATE_TIME_FORMAT)
-          : undefined,
-      details: this.editForm.get(['details']).value,
+      description: this.editForm.get(['description']).value,
+      estimatedTime: this.editForm.get(['estimatedTime']).value,
+      spentTime: this.editForm.get(['spentTime']).value,
+      milestone: this.editForm.get(['milestone']).value,
       status: this.editForm.get(['status']).value,
-      projectUpdates: this.editForm.get(['projectUpdates']).value,
-      comments: this.editForm.get(['comments']).value,
-      users: this.editForm.get(['users']).value,
-      teams: this.editForm.get(['teams']).value,
-      assignedTeam: this.editForm.get(['assignedTeam']).value,
-      milestone: this.editForm.get(['milestone']).value
+      taskType: this.editForm.get(['taskType']).value,
+      priority: this.editForm.get(['priority']).value,
+      assignee: this.editForm.get(['assignee']).value,
+      parent: this.editForm.get(['parent']).value,
+      users: this.editForm.get(['users']).value
     };
   }
 
@@ -182,15 +213,19 @@ export class TaskUpdateComponent implements OnInit {
     this.jhiAlertService.error(errorMessage, null, null);
   }
 
+  trackMilestoneById(index: number, item: IMilestone) {
+    return item.id;
+  }
+
   trackStatusById(index: number, item: IStatus) {
     return item.id;
   }
 
-  trackProjectUpdateById(index: number, item: IProjectUpdate) {
+  trackTaskTypeById(index: number, item: ITaskType) {
     return item.id;
   }
 
-  trackCommentById(index: number, item: IComment) {
+  trackPriorityById(index: number, item: IPriority) {
     return item.id;
   }
 
@@ -198,11 +233,19 @@ export class TaskUpdateComponent implements OnInit {
     return item.id;
   }
 
-  trackTeamById(index: number, item: ITeam) {
+  trackTaskById(index: number, item: ITask) {
     return item.id;
   }
 
-  trackMilestoneById(index: number, item: IMilestone) {
+  trackAttachmentById(index: number, item: IAttachment) {
+    return item.id;
+  }
+
+  trackCommentById(index: number, item: IComment) {
+    return item.id;
+  }
+
+  trackTeamById(index: number, item: ITeam) {
     return item.id;
   }
 

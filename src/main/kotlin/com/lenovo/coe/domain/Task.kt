@@ -1,5 +1,6 @@
 package com.lenovo.coe.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Field
@@ -14,7 +15,6 @@ import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 import java.io.Serializable
-import java.time.Instant
 
 /**
  * A Task.
@@ -29,11 +29,20 @@ class Task(
     @Field("name")
     var name: String? = null,
 
-    @Field("estimated_date")
-    var estimatedDate: Instant? = null,
+    @get: NotNull
+    @Field("description")
+    var description: String? = null,
 
-    @Field("details")
-    var details: String? = null,
+    @Field("estimated_time")
+    var estimatedTime: Float? = null,
+
+    @Field("spent_time")
+    var spentTime: Float? = null,
+
+    @DBRef
+    @Field("milestone")
+    @JsonIgnoreProperties("tasks")
+    var milestone: Milestone? = null,
 
     @DBRef
     @Field("status")
@@ -41,53 +50,50 @@ class Task(
     var status: Status? = null,
 
     @DBRef
-    @Field("projectUpdates")
-    var projectUpdates: MutableSet<ProjectUpdate> = mutableSetOf(),
+    @Field("taskType")
+    @JsonIgnoreProperties("tasks")
+    var taskType: TaskType? = null,
 
     @DBRef
-    @Field("comments")
-    var comments: MutableSet<Comment> = mutableSetOf(),
+    @Field("priority")
+    @JsonIgnoreProperties("tasks")
+    var priority: Priority? = null,
+
+    @DBRef
+    @Field("assignee")
+    @JsonIgnoreProperties("tasks")
+    var assignee: User? = null,
+
+    @DBRef
+    @Field("parent")
+    @JsonIgnoreProperties("subTasks")
+    var parent: Task? = null,
 
     @DBRef
     @Field("users")
     var users: MutableSet<User> = mutableSetOf(),
 
     @DBRef
+    @Field("subTasks")
+    var subTasks: MutableSet<Task> = mutableSetOf(),
+
+    @DBRef
+    @Field("attachments")
+    @JsonIgnore
+    var attachments: MutableSet<Attachment> = mutableSetOf(),
+
+    @DBRef
+    @Field("comments")
+    @JsonIgnore
+    var comments: MutableSet<Comment> = mutableSetOf(),
+
+    @DBRef
     @Field("teams")
-    var teams: MutableSet<Team> = mutableSetOf(),
-
-    @DBRef
-    @Field("assignedTeam")
-    @JsonIgnoreProperties("tasks")
-    var assignedTeam: Team? = null,
-
-    @DBRef
-    @Field("milestone")
-    @JsonIgnoreProperties("tasks")
-    var milestone: Milestone? = null
+    @JsonIgnore
+    var teams: MutableSet<Team> = mutableSetOf()
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
-
-    fun addProjectUpdate(projectUpdate: ProjectUpdate): Task {
-        this.projectUpdates.add(projectUpdate)
-        return this
-    }
-
-    fun removeProjectUpdate(projectUpdate: ProjectUpdate): Task {
-        this.projectUpdates.remove(projectUpdate)
-        return this
-    }
-
-    fun addComment(comment: Comment): Task {
-        this.comments.add(comment)
-        return this
-    }
-
-    fun removeComment(comment: Comment): Task {
-        this.comments.remove(comment)
-        return this
-    }
 
     fun addUser(user: User): Task {
         this.users.add(user)
@@ -99,13 +105,51 @@ class Task(
         return this
     }
 
+    fun addSubTasks(task: Task): Task {
+        this.subTasks.add(task)
+        task.parent = this
+        return this
+    }
+
+    fun removeSubTasks(task: Task): Task {
+        this.subTasks.remove(task)
+        task.parent = null
+        return this
+    }
+
+    fun addAttachment(attachment: Attachment): Task {
+        this.attachments.add(attachment)
+        attachment.tasks.add(this)
+        return this
+    }
+
+    fun removeAttachment(attachment: Attachment): Task {
+        this.attachments.remove(attachment)
+        attachment.tasks.remove(this)
+        return this
+    }
+
+    fun addComment(comment: Comment): Task {
+        this.comments.add(comment)
+        comment.tasks.add(this)
+        return this
+    }
+
+    fun removeComment(comment: Comment): Task {
+        this.comments.remove(comment)
+        comment.tasks.remove(this)
+        return this
+    }
+
     fun addTeam(team: Team): Task {
         this.teams.add(team)
+        team.tasks.add(this)
         return this
     }
 
     fun removeTeam(team: Team): Task {
         this.teams.remove(team)
+        team.tasks.remove(this)
         return this
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
@@ -123,8 +167,9 @@ class Task(
     override fun toString() = "Task{" +
         "id=$id" +
         ", name='$name'" +
-        ", estimatedDate='$estimatedDate'" +
-        ", details='$details'" +
+        ", description='$description'" +
+        ", estimatedTime=$estimatedTime" +
+        ", spentTime=$spentTime" +
         "}"
 
 

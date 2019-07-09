@@ -3,18 +3,15 @@ package com.lenovo.coe.web.rest
 import com.lenovo.coe.PmAppApp
 import com.lenovo.coe.domain.Project
 import com.lenovo.coe.repository.ProjectRepository
-import com.lenovo.coe.service.ProjectService
 import com.lenovo.coe.web.rest.errors.ExceptionTranslator
 
 import kotlin.test.assertNotNull
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.MediaType
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -27,11 +24,6 @@ import java.time.temporal.ChronoUnit
 
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.hasItem
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.reset
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -52,15 +44,6 @@ class ProjectResourceIT {
     @Autowired
     private lateinit var projectRepository: ProjectRepository
 
-    @Mock
-    private lateinit var projectRepositoryMock: ProjectRepository
-
-    @Mock
-    private lateinit var projectServiceMock: ProjectService
-
-    @Autowired
-    private lateinit var projectService: ProjectService
-
     @Autowired
     private lateinit var jacksonMessageConverter: MappingJackson2HttpMessageConverter
 
@@ -80,7 +63,7 @@ class ProjectResourceIT {
     @BeforeEach
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        val projectResource = ProjectResource(projectService)
+        val projectResource = ProjectResource(projectRepository)
         this.restProjectMockMvc = MockMvcBuilders.standaloneSetup(projectResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -111,11 +94,9 @@ class ProjectResourceIT {
         assertThat(projectList).hasSize(databaseSizeBeforeCreate + 1)
         val testProject = projectList[projectList.size - 1]
         assertThat(testProject.name).isEqualTo(DEFAULT_NAME)
-        assertThat(testProject.objective).isEqualTo(DEFAULT_OBJECTIVE)
-        assertThat(testProject.target).isEqualTo(DEFAULT_TARGET)
-        assertThat(testProject.budget).isEqualTo(DEFAULT_BUDGET)
-        assertThat(testProject.risk).isEqualTo(DEFAULT_RISK)
-        assertThat(testProject.benefitMesurement).isEqualTo(DEFAULT_BENEFIT_MESUREMENT)
+        assertThat(testProject.code).isEqualTo(DEFAULT_CODE)
+        assertThat(testProject.description).isEqualTo(DEFAULT_DESCRIPTION)
+        assertThat(testProject.estimatedEndDate).isEqualTo(DEFAULT_ESTIMATED_END_DATE)
     }
 
     @Test
@@ -157,46 +138,10 @@ class ProjectResourceIT {
     }
 
     @Test
-    fun checkObjectiveIsRequired() {
+    fun checkCodeIsRequired() {
         val databaseSizeBeforeTest = projectRepository.findAll().size
         // set the field null
-        project.objective = null
-
-        // Create the Project, which fails.
-
-        restProjectMockMvc.perform(
-            post("/api/projects")
-                .contentType(APPLICATION_JSON_UTF8)
-                .content(convertObjectToJsonBytes(project))
-        ).andExpect(status().isBadRequest)
-
-        val projectList = projectRepository.findAll()
-        assertThat(projectList).hasSize(databaseSizeBeforeTest)
-    }
-
-    @Test
-    fun checkTargetIsRequired() {
-        val databaseSizeBeforeTest = projectRepository.findAll().size
-        // set the field null
-        project.target = null
-
-        // Create the Project, which fails.
-
-        restProjectMockMvc.perform(
-            post("/api/projects")
-                .contentType(APPLICATION_JSON_UTF8)
-                .content(convertObjectToJsonBytes(project))
-        ).andExpect(status().isBadRequest)
-
-        val projectList = projectRepository.findAll()
-        assertThat(projectList).hasSize(databaseSizeBeforeTest)
-    }
-
-    @Test
-    fun checkRiskIsRequired() {
-        val databaseSizeBeforeTest = projectRepository.findAll().size
-        // set the field null
-        project.risk = null
+        project.code = null
 
         // Create the Project, which fails.
 
@@ -221,46 +166,11 @@ class ProjectResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(project.id)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].objective").value(hasItem(DEFAULT_OBJECTIVE)))
-            .andExpect(jsonPath("$.[*].target").value(hasItem(DEFAULT_TARGET.toString())))
-            .andExpect(jsonPath("$.[*].budget").value(hasItem(DEFAULT_BUDGET)))
-            .andExpect(jsonPath("$.[*].risk").value(hasItem(DEFAULT_RISK)))
-            .andExpect(jsonPath("$.[*].benefitMesurement").value(hasItem(DEFAULT_BENEFIT_MESUREMENT)))
+            .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].estimatedEndDate").value(hasItem(DEFAULT_ESTIMATED_END_DATE.toString())))
     }
     
-    @Suppress("unchecked")
-    fun getAllProjectsWithEagerRelationshipsIsEnabled() {
-        val projectResource = ProjectResource(projectServiceMock)
-        `when`(projectServiceMock.findAllWithEagerRelationships(any())).thenReturn(PageImpl(mutableListOf()))
-
-        val restProjectMockMvc = MockMvcBuilders.standaloneSetup(projectResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build()
-
-        restProjectMockMvc.perform(get("/api/projects?eagerload=true"))
-            .andExpect(status().isOk)
-
-        verify(projectServiceMock, times(1)).findAllWithEagerRelationships(any())
-    }
-
-    @Suppress("unchecked")
-    fun getAllProjectsWithEagerRelationshipsIsNotEnabled() {
-        val projectResource = ProjectResource(projectServiceMock)
-            `when`(projectServiceMock.findAllWithEagerRelationships(any())).thenReturn( PageImpl( mutableListOf()))
-        val restProjectMockMvc = MockMvcBuilders.standaloneSetup(projectResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build()
-
-        restProjectMockMvc.perform(get("/api/projects?eagerload=true"))
-            .andExpect(status().isOk)
-
-        verify(projectServiceMock, times(1)).findAllWithEagerRelationships(any())
-    }
-
     @Test
     fun getProject() {
         // Initialize the database
@@ -275,11 +185,9 @@ class ProjectResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(id))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.objective").value(DEFAULT_OBJECTIVE))
-            .andExpect(jsonPath("$.target").value(DEFAULT_TARGET.toString()))
-            .andExpect(jsonPath("$.budget").value(DEFAULT_BUDGET))
-            .andExpect(jsonPath("$.risk").value(DEFAULT_RISK))
-            .andExpect(jsonPath("$.benefitMesurement").value(DEFAULT_BENEFIT_MESUREMENT))
+            .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.estimatedEndDate").value(DEFAULT_ESTIMATED_END_DATE.toString()))
     }
 
     @Test
@@ -292,7 +200,7 @@ class ProjectResourceIT {
     @Test
     fun updateProject() {
         // Initialize the database
-        projectService.save(project)
+        projectRepository.save(project)
 
         val databaseSizeBeforeUpdate = projectRepository.findAll().size
 
@@ -301,11 +209,9 @@ class ProjectResourceIT {
         assertNotNull(id)
         val updatedProject = projectRepository.findById(id).get()
         updatedProject.name = UPDATED_NAME
-        updatedProject.objective = UPDATED_OBJECTIVE
-        updatedProject.target = UPDATED_TARGET
-        updatedProject.budget = UPDATED_BUDGET
-        updatedProject.risk = UPDATED_RISK
-        updatedProject.benefitMesurement = UPDATED_BENEFIT_MESUREMENT
+        updatedProject.code = UPDATED_CODE
+        updatedProject.description = UPDATED_DESCRIPTION
+        updatedProject.estimatedEndDate = UPDATED_ESTIMATED_END_DATE
 
         restProjectMockMvc.perform(
             put("/api/projects")
@@ -318,11 +224,9 @@ class ProjectResourceIT {
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate)
         val testProject = projectList[projectList.size - 1]
         assertThat(testProject.name).isEqualTo(UPDATED_NAME)
-        assertThat(testProject.objective).isEqualTo(UPDATED_OBJECTIVE)
-        assertThat(testProject.target).isEqualTo(UPDATED_TARGET)
-        assertThat(testProject.budget).isEqualTo(UPDATED_BUDGET)
-        assertThat(testProject.risk).isEqualTo(UPDATED_RISK)
-        assertThat(testProject.benefitMesurement).isEqualTo(UPDATED_BENEFIT_MESUREMENT)
+        assertThat(testProject.code).isEqualTo(UPDATED_CODE)
+        assertThat(testProject.description).isEqualTo(UPDATED_DESCRIPTION)
+        assertThat(testProject.estimatedEndDate).isEqualTo(UPDATED_ESTIMATED_END_DATE)
     }
 
     @Test
@@ -346,7 +250,7 @@ class ProjectResourceIT {
     @Test
     fun deleteProject() {
         // Initialize the database
-        projectService.save(project)
+        projectRepository.save(project)
 
         val databaseSizeBeforeDelete = projectRepository.findAll().size
 
@@ -383,20 +287,14 @@ class ProjectResourceIT {
         private const val DEFAULT_NAME: String = "AAAAAAAAAA"
         private const val UPDATED_NAME = "BBBBBBBBBB"
 
-        private const val DEFAULT_OBJECTIVE: String = "AAAAAAAAAA"
-        private const val UPDATED_OBJECTIVE = "BBBBBBBBBB"
+        private const val DEFAULT_CODE: String = "AAAAAAAAAA"
+        private const val UPDATED_CODE = "BBBBBBBBBB"
 
-        private val DEFAULT_TARGET: Instant = Instant.ofEpochMilli(0L)
-        private val UPDATED_TARGET: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS)
+        private const val DEFAULT_DESCRIPTION: String = "AAAAAAAAAA"
+        private const val UPDATED_DESCRIPTION = "BBBBBBBBBB"
 
-        private const val DEFAULT_BUDGET: Double = 1.0
-        private const val UPDATED_BUDGET: Double = 2.0
-
-        private const val DEFAULT_RISK: String = "AAAAAAAAAA"
-        private const val UPDATED_RISK = "BBBBBBBBBB"
-
-        private const val DEFAULT_BENEFIT_MESUREMENT: String = "AAAAAAAAAA"
-        private const val UPDATED_BENEFIT_MESUREMENT = "BBBBBBBBBB"
+        private val DEFAULT_ESTIMATED_END_DATE: Instant = Instant.ofEpochMilli(0L)
+        private val UPDATED_ESTIMATED_END_DATE: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS)
 
         /**
          * Create an entity for this test.
@@ -408,11 +306,9 @@ class ProjectResourceIT {
         fun createEntity(): Project {
             val project = Project(
                 name = DEFAULT_NAME,
-                objective = DEFAULT_OBJECTIVE,
-                target = DEFAULT_TARGET,
-                budget = DEFAULT_BUDGET,
-                risk = DEFAULT_RISK,
-                benefitMesurement = DEFAULT_BENEFIT_MESUREMENT
+                code = DEFAULT_CODE,
+                description = DEFAULT_DESCRIPTION,
+                estimatedEndDate = DEFAULT_ESTIMATED_END_DATE
             )
 
             return project
@@ -428,11 +324,9 @@ class ProjectResourceIT {
         fun createUpdatedEntity(): Project {
             val project = Project(
                 name = UPDATED_NAME,
-                objective = UPDATED_OBJECTIVE,
-                target = UPDATED_TARGET,
-                budget = UPDATED_BUDGET,
-                risk = UPDATED_RISK,
-                benefitMesurement = UPDATED_BENEFIT_MESUREMENT
+                code = UPDATED_CODE,
+                description = UPDATED_DESCRIPTION,
+                estimatedEndDate = UPDATED_ESTIMATED_END_DATE
             )
 
             return project

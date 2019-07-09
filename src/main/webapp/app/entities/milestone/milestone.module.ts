@@ -11,20 +11,17 @@ import {
   milestoneRoute,
   milestonePopupRoute
 } from './';
-import { MilestoneManageComponent } from './milestone-manage/milestone-manage.component';
-import { AutoCompleteModule, CalendarModule, InputTextModule } from 'primeng/primeng';
 
 const ENTITY_STATES = [...milestoneRoute, ...milestonePopupRoute];
 
 @NgModule({
-  imports: [PmAppSharedModule, RouterModule.forChild(ENTITY_STATES), InputTextModule, CalendarModule, AutoCompleteModule],
+  imports: [PmAppSharedModule, RouterModule.forChild(ENTITY_STATES)],
   declarations: [
     MilestoneComponent,
     MilestoneDetailComponent,
     MilestoneUpdateComponent,
     MilestoneDeleteDialogComponent,
-    MilestoneDeletePopupComponent,
-    MilestoneManageComponent
+    MilestoneDeletePopupComponent
   ],
   entryComponents: [MilestoneComponent, MilestoneUpdateComponent, MilestoneDeleteDialogComponent, MilestoneDeletePopupComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

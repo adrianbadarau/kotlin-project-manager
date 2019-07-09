@@ -51,19 +51,17 @@ export class MilestoneService {
 
   protected convertDateFromClient(milestone: IMilestone): IMilestone {
     const copy: IMilestone = Object.assign({}, milestone, {
-      target: milestone.target != null && milestone.target.isValid() ? milestone.target.toJSON() : null,
       estimatedEndDate:
         milestone.estimatedEndDate != null && milestone.estimatedEndDate.isValid() ? milestone.estimatedEndDate.toJSON() : null,
-      actualEndDate: milestone.actualEndDate != null && milestone.actualEndDate.isValid() ? milestone.actualEndDate.toJSON() : null
+      endDate: milestone.endDate != null && milestone.endDate.isValid() ? milestone.endDate.toJSON() : null
     });
     return copy;
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.target = res.body.target != null ? moment(res.body.target) : null;
       res.body.estimatedEndDate = res.body.estimatedEndDate != null ? moment(res.body.estimatedEndDate) : null;
-      res.body.actualEndDate = res.body.actualEndDate != null ? moment(res.body.actualEndDate) : null;
+      res.body.endDate = res.body.endDate != null ? moment(res.body.endDate) : null;
     }
     return res;
   }
@@ -71,9 +69,8 @@ export class MilestoneService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((milestone: IMilestone) => {
-        milestone.target = milestone.target != null ? moment(milestone.target) : null;
         milestone.estimatedEndDate = milestone.estimatedEndDate != null ? moment(milestone.estimatedEndDate) : null;
-        milestone.actualEndDate = milestone.actualEndDate != null ? moment(milestone.actualEndDate) : null;
+        milestone.endDate = milestone.endDate != null ? moment(milestone.endDate) : null;
       });
     }
     return res;
