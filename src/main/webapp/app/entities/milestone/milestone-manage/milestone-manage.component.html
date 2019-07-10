@@ -7,7 +7,7 @@
                     yearRange="2019:2050" [placeholder]="'Estimated End Date'"></p-calendar>
     </div>
     <div class="ui-g-4">
-        <p-autoComplete [(ngModel)]="milestone.owner" [suggestions]="results" (completeMethod)="search($event)"
+        <p-autoComplete [(ngModel)]="milestone.users" [suggestions]="results" (completeMethod)="search($event)"
                         field="owner" [size]="30" placeholder="Countries" [minLength]="1"></p-autoComplete>
     </div>
 </div>

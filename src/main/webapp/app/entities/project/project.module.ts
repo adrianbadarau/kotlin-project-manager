@@ -12,7 +12,7 @@ import {
   projectPopupRoute
 } from './';
 import { ProjectManageComponent } from 'app/entities/project/manage/manage.component';
-import { AutoCompleteModule, CalendarModule, EditorModule, InputTextModule, PanelModule } from 'primeng/primeng';
+import { AutoCompleteModule, ButtonModule, CalendarModule, EditorModule, InputTextModule, PanelModule } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 
 const ENTITY_STATES = [...projectRoute, ...projectPopupRoute];
@@ -26,7 +26,8 @@ const ENTITY_STATES = [...projectRoute, ...projectPopupRoute];
     EditorModule,
     AutoCompleteModule,
     PanelModule,
-    TableModule
+    TableModule,
+    ButtonModule
   ],
   declarations: [
     ProjectComponent,

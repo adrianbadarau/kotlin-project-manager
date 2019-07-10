@@ -9,6 +9,7 @@ import { Project } from 'app/shared/model/project.model';
 export class ProjectManageComponent implements OnInit {
   private project: Project;
   results: string[] = ['abadarau', 'testUser'];
+  customTables: any[] = [];
 
   constructor() {}
 
@@ -20,5 +21,9 @@ export class ProjectManageComponent implements OnInit {
 
   search(event) {
     this.results = ['test', 'testAgain'];
+  }
+
+  onClickAddCustomTable() {
+    this.customTables.push([]);
   }
 }

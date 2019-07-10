@@ -30,9 +30,19 @@
 </div>
 <hr>
 <div class="row">
+    <p-panel header="Custom Fields" [toggleable]="true">
+        <jhi-custom-field-manage [existingFields]="[]"></jhi-custom-field-manage>
+    </p-panel>
+</div>
+<hr>
+<div class="row">
     <div class="col-md-12">
-        <p-panel header="Custom Fields" [toggleable]="true">
-            <jhi-custom-field-manage-multiple [existingFields]="[]"></jhi-custom-field-manage-multiple>
+        <p-button label="Add Table" (onClick)="onClickAddCustomTable()"></p-button>
+    </div>
+
+    <div class="col-md-12" *ngFor="let table of customTables">
+        <p-panel header="2D Table" [toggleable]="true">
+            <jhi-custom-field-manage-multiple [existingFields]="table"></jhi-custom-field-manage-multiple>
         </p-panel>
     </div>
 </div>
