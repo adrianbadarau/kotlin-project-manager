@@ -11,6 +11,7 @@ import { MilestoneDetailComponent } from './milestone-detail.component';
 import { MilestoneUpdateComponent } from './milestone-update.component';
 import { MilestoneDeletePopupComponent } from './milestone-delete-dialog.component';
 import { IMilestone } from 'app/shared/model/milestone.model';
+import { MilestoneManageComponent } from 'app/entities/milestone/milestone-manage/milestone-manage.component';
 
 @Injectable({ providedIn: 'root' })
 export class MilestoneResolve implements Resolve<IMilestone> {
@@ -52,7 +53,7 @@ export const milestoneRoute: Routes = [
   },
   {
     path: 'new',
-    component: MilestoneUpdateComponent,
+    component: MilestoneManageComponent,
     resolve: {
       milestone: MilestoneResolve
     },

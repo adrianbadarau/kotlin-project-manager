@@ -11,17 +11,30 @@ import {
   projectRoute,
   projectPopupRoute
 } from './';
+import { ProjectManageComponent } from 'app/entities/project/manage/manage.component';
+import { AutoCompleteModule, CalendarModule, EditorModule, InputTextModule, PanelModule } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
 
 const ENTITY_STATES = [...projectRoute, ...projectPopupRoute];
 
 @NgModule({
-  imports: [PmAppSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [
+    PmAppSharedModule,
+    RouterModule.forChild(ENTITY_STATES),
+    InputTextModule,
+    CalendarModule,
+    EditorModule,
+    AutoCompleteModule,
+    PanelModule,
+    TableModule
+  ],
   declarations: [
     ProjectComponent,
     ProjectDetailComponent,
     ProjectUpdateComponent,
     ProjectDeleteDialogComponent,
-    ProjectDeletePopupComponent
+    ProjectDeletePopupComponent,
+    ProjectManageComponent
   ],
   entryComponents: [ProjectComponent, ProjectUpdateComponent, ProjectDeleteDialogComponent, ProjectDeletePopupComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
