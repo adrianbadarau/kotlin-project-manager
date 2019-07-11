@@ -4,6 +4,7 @@ import { IStatus } from 'app/shared/model/status.model';
 import { IMilestone } from 'app/shared/model/milestone.model';
 import { IAttachment } from 'app/shared/model/attachment.model';
 import { IComment } from 'app/shared/model/comment.model';
+import { IField } from 'app/shared/model/field.model';
 
 export interface IProject {
   id?: string;
@@ -16,6 +17,8 @@ export interface IProject {
   milestones?: IMilestone[];
   attachments?: IAttachment[];
   comments?: IComment[];
+  customFields?: IField[];
+  customTables?: any[];
 }
 
 export class Project implements IProject {
@@ -29,6 +32,8 @@ export class Project implements IProject {
     public status?: IStatus,
     public milestones?: IMilestone[],
     public attachments?: IAttachment[],
-    public comments?: IComment[]
+    public comments?: IComment[],
+    public customFields?: IField[],
+    public customTables?: any[]
   ) {}
 }
