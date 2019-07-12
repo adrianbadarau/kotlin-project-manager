@@ -12,7 +12,7 @@ export class ProjectManageComponent implements OnInit {
   results: string[] = ['abadarau', 'testUser'];
   customTables: any[] = [];
   customFields: any[] = [];
-  isSaving: boolean;
+  isSaving: boolean = false;
 
   constructor(private projectService: ProjectService) {}
 
@@ -37,5 +37,6 @@ export class ProjectManageComponent implements OnInit {
   onSaveButtonClick() {
     this.project.customTables = this.customTables;
     this.project.customFields = this.customFields;
+    this.projectService.create(this.project).subscribe(resp => console.log(resp));
   }
 }

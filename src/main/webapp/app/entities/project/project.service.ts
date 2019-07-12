@@ -19,9 +19,9 @@ export class ProjectService {
   constructor(protected http: HttpClient) {}
 
   create(project: IProject): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(project);
+    // const copy = this.convertDateFromClient(project);
     return this.http
-      .post<IProject>(this.resourceUrl, copy, { observe: 'response' })
+      .post<IProject>(this.resourceUrl, project, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 

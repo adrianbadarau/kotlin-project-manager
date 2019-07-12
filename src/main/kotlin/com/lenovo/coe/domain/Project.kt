@@ -2,6 +2,7 @@ package com.lenovo.coe.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.lenovo.coe.domain.pojo.CustomField
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.data.mongodb.core.mapping.Document
@@ -40,6 +41,12 @@ class Project(
     @Field("estimated_end_date")
     var estimatedEndDate: Instant? = null,
 
+    @Field("custom_fields")
+    var customFields: MutableList<CustomField> = mutableListOf(),
+
+    @Field("custom_tables")
+    var customTables: MutableList<MutableList<HashMap<String, Any>>> = mutableListOf(),
+
     @DBRef
     @Field("owner")
     @JsonIgnoreProperties("projects")
@@ -64,7 +71,7 @@ class Project(
     @JsonIgnore
     var comments: MutableSet<Comment> = mutableSetOf()
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+// jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 ) : Serializable {
 
     fun addMilestone(milestone: Milestone): Project {
