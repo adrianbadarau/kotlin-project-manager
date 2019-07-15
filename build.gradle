@@ -199,6 +199,10 @@ dependencies {
     }
     implementation "io.springfox:springfox-bean-validators"
     implementation "org.mapstruct:mapstruct:${mapstruct_version}"
+
+//    CUSTOM DEPENDENCIES
+    implementation "org.apache.poi:poi:4.1.0"
+    implementation "org.apache.poi:poi-ooxml:4.1.0"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
     annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor:${spring_boot_version}") {
         exclude group: "com.vaadin.external.google", module: "android-json"
