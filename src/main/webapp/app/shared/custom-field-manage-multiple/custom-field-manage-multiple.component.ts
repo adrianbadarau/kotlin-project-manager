@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Field, IField } from 'app/shared/model/field.model';
+import { CustomFieldManageMultipleService } from 'app/shared/custom-field-manage-multiple/custom-field-manage-multiple.service';
 
 @Component({
   selector: 'jhi-custom-field-manage-multiple',
@@ -16,10 +17,10 @@ export class CustomFieldManageMultipleComponent implements OnInit {
   displayColumnDialog: boolean;
   newColumnName: string;
 
-  constructor() {}
+  constructor(private service: CustomFieldManageMultipleService) {}
 
   ngOnInit() {
-    this.cols = [{ field: 'name', header: 'Name' }, { field: 'data', header: 'Value' }];
+    this.cols = [];
   }
 
   showDialogToAdd() {
@@ -69,5 +70,23 @@ export class CustomFieldManageMultipleComponent implements OnInit {
       header: this.newColumnName
     });
     this.displayColumnDialog = false;
+  }
+
+  async onUpload(event: any) {
+    console.log(event);
+    const resp = (await this.service.uploadFile(event.files[0])) as Object[];
+    this.createColumnsFromExcelData(resp.shift());
+    this.existingFields.push(...resp);
+  }
+
+  private createColumnsFromExcelData(item: any) {
+    for (let key in item) {
+      if (item.hasOwnProperty(key)) {
+        this.cols.push({
+          field: key,
+          header: key
+        });
+      }
+    }
   }
 }

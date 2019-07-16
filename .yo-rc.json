@@ -21,7 +21,8 @@
     "serviceDiscoveryType": false,
     "buildTool": "gradle",
     "enableSwaggerCodegen": false,
-    "jwtSecretKey": "MjliOGY2ZTI4ZWI5Mzk4NWZlMDE3MGM4ZDIwZmY1YzUwZTk2MTM0YTA5ZTIxZTdlOGYxNTI1MDMwYWNkMTgzODJkMDNjZmE2NzI5NjU0MzI1NGIzZDAyOTIyYmM2NzRmODlkYjViODdjOTM4NzA3Mzk3ODI3ZWQxZTYzNWRkMGM="
+    "jwtSecretKey": "MjliOGY2ZTI4ZWI5Mzk4NWZlMDE3MGM4ZDIwZmY1YzUwZTk2MTM0YTA5ZTIxZTdlOGYxNTI1MDMwYWNkMTgzODJkMDNjZmE2NzI5NjU0MzI1NGIzZDAyOTIyYmM2NzRmODlkYjViODdjOTM4NzA3Mzk3ODI3ZWQxZTYzNWRkMGM=",
+    "enableTranslation": true
   },
   "generator-jhipster": {
     "jhipsterVersion": "6.1.2",

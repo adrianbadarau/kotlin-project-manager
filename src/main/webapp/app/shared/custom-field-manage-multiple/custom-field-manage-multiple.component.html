@@ -1,7 +1,7 @@
 <p-table [columns]="cols" [value]="existingFields" selectionMode="single" [(selection)]="selectedField"
          (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
     <ng-template pTemplate="caption">
-        Custom Data Table
+        Custom Data Table <p-fileUpload  maxFileSize="1000000" mode="basic" customUpload="true" (uploadHandler)="onUpload($event)" [auto]="true"  chooseLabel="Browse"></p-fileUpload>
     </ng-template>
     <ng-template pTemplate="header" let-columns>
         <tr>
